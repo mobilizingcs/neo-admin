@@ -13,13 +13,12 @@ class SummaryComponent extends React.Component {
 	}
 
 	componentDidMount() {
-        const { dispatch } = this.props;
+    const { dispatch } = this.props;
 		dispatch( fetchSummary( ) );
 	}
 
 	render( ) {
 		const { summary } = this.props;
-		console.log(this.props);
 		return (
 			<div style={{margin:'50px'}}>
 				<h3>Ohmage Server Information</h3>

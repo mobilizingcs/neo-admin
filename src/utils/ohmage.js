@@ -12,7 +12,6 @@ class Ohmage {
 		this.client = client || 'ohmage.js';
 		this.auth_token = auth_token || null;
 		this.keycloak_token = keycloak_token || null;
-
 		if( ( this.auth_token === null
 			&& this.keycloak_token === null )
 			|| !this.server_url ) {
@@ -20,12 +19,11 @@ class Ohmage {
 		}
 	}
 
-	_call( endpoint ) {
+	_call( endpoint, data = { } ) {
 
 		let headers = {
 			'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
 		};
-		let data = {};
 
 		if( !!this.keycloak_token ) {
 			headers[ 'Authorization' ] = 'Bearer ' + this.keycloak_token;
@@ -70,6 +68,10 @@ class Ohmage {
 
 	readConfig( ) {
 		return this._call( '/config/read' );
+	}
+
+	getLogs( parameters ) {
+		return this._call( '/audit/read', parameters );
 	}
 
 }

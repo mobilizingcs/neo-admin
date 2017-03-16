@@ -7,6 +7,10 @@ import configureStore from './configureStore';
 
 import App from './components/App';
 import Summary from './components/Summary';
+//import Class from './components/Class';
+//import CreateClass from './components/CreateClass';
+
+import AuditConsole from './components/AuditConsole';
 
 const store = configureStore( );
 
@@ -15,10 +19,12 @@ ReactDOM.render((
   <Provider store={store}>
     <Router history={browserHistory}>
       <Route path="/" component={App}>
-      	<Route path="/summary" component={Summary} />
-      	<Route path="/classes" />
-      	<Route path="/users" />
-      	<Route path="/audits" />
+      	<Route path="summary" component={Summary} />
+      	{/*<Route path="classes" component={Class} >
+          <Route path="/class/new" component={CreateClass} />
+        </Route>
+      	<Route path="users" />*/}
+      	<Route path="audits" component={AuditConsole} />
       </Route>
     </Router>
   </Provider>
