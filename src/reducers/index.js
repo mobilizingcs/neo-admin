@@ -1,8 +1,10 @@
 import { combineReducers } from 'redux';
 import summary from './summary';
+import teacherSetup from './teacherSetup';
 
 const rootReducer = combineReducers({
-	summary
+	summary,
+  teacherSetup
 });
 
 export default rootReducer;

@@ -16,6 +16,7 @@ class AppComponent extends React.Component {
 		                <Link activeClassName="is-active" to="/summary">Summary</Link>
 		                {/*<Link activeClassName="is-active" to="/users">Users</Link>
 		                <Link activeClassName="is-active" to="/classes">Classes</Link>*/}
+                    <Link activeClassName="is-active" to="/teacher-setup">Teacher Setup</Link>
 		                <Link activeClassName="is-active" to="/audits">Audit Console</Link>
 		            </Navigation>
 		        </Drawer>
