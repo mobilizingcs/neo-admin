@@ -38,14 +38,14 @@ function createAccountsResponse( response ) {
 export function createOhmageAccounts( account_list ) {
   return dispatch => {
     dispatch( createAccounts( account_list ) );
-    // todo: call ohmage with a batch user creation API
+    //  resumhere todo: call ohmage with a batch user creation API
     return;
   }
 }
 
 export function parseCsvFile( file_object ) {
   return dispatch => {
-    dispatch( parseCsv(  ) );
+    dispatch( parseCsv( ) );
     Papa.parse( file_object, { complete: results => {
       results = results.data;
       let accounts_to_create = [ ];
@@ -59,7 +59,11 @@ export function parseCsvFile( file_object ) {
           organization: results[ i ][ 3 ],
           email_address: results[ i ][ 4 ],
           username: results[ i ][ 5 ],
-          password: !generatePasswords ? results[ i ][ 6 ] : null
+          password: !generatePasswords ? results[ i ][ 6 ] : null,
+          status: {
+            created: false,
+            permissions_set: false
+          }
         } );
       }
       dispatch( updateCsvView( accounts_to_create ) );

@@ -1,14 +1,11 @@
-import { combineReducers } from 'redux';
-
 import { PARSE_CSV, UPDATE_CSV_VIEW,
   CREATE_ACCOUNTS_REQUEST, CREATE_ACCOUNTS_RESPONSE }
   from '../actions/teachersetup';
 
 const initialState = {
-  parsedAccounts: [ ],
-  createdAccounts: [ ],
-  isCreating: false,
-  isParsing: false
+  parsed_accounts: [ ],
+  is_creating: false,
+  is_parsing: false
 };
 
 function updateState( state, action ) {
@@ -19,20 +16,20 @@ function updateState( state, action ) {
   switch( action.type ) {
     case PARSE_CSV:
       return Object.assign( { }, state, {
-        isParsing: true
+        is_parsing: true
       } );
     case UPDATE_CSV_VIEW:
-      // resume here: update state with the parsed accounts received in this action
       return Object.assign( { }, state, {
-        isParsing: false
+        is_parsing: false,
+        parsed_accounts: action.parsed_accounts
       } );
     case CREATE_ACCOUNTS_REQUEST:
       return Object.assign( { }, state, {
-        isCreating: true
+        is_creating: true
       } );
     case CREATE_ACCOUNTS_RESPONSE:
       return Object.assign( { }, state, {
-        isCreating: false
+        is_creating: false
       } );
     default:
       return state;
