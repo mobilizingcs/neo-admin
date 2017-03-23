@@ -1,5 +1,5 @@
 import { PARSE_CSV, UPDATE_CSV_VIEW,
-  CREATE_ACCOUNTS_REQUEST, CREATE_ACCOUNTS_RESPONSE }
+  CREATE_ACCOUNT_REQUEST, CREATE_ACCOUNT_RESPONSE }
   from '../actions/teachersetup';
 
 const initialState = {
@@ -23,11 +23,11 @@ function updateState( state, action ) {
         is_parsing: false,
         parsed_accounts: action.parsed_accounts
       } );
-    case CREATE_ACCOUNTS_REQUEST:
+    case CREATE_ACCOUNT_REQUEST:
       return Object.assign( { }, state, {
         is_creating: true
       } );
-    case CREATE_ACCOUNTS_RESPONSE:
+    case CREATE_ACCOUNT_RESPONSE:
       return Object.assign( { }, state, {
         is_creating: false
       } );

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Grid, DataTable, TableHeader } from 'react-mdl';
+import { Grid, Cell, DataTable, TableHeader } from 'react-mdl';
 
 class CSVPreview extends React.Component {
 
@@ -10,7 +10,7 @@ class CSVPreview extends React.Component {
 
   render( ) {
     if( this.props.parsed_accounts.length < 1 ) {
-      return (<div></div>);
+      return (<Grid><Cell col={12}>CSV Preview Window</Cell></Grid>);
     }
     return (
       <Grid>
@@ -19,8 +19,8 @@ class CSVPreview extends React.Component {
           <TableHeader name="last_name">Last Name</TableHeader>
           <TableHeader name="personal_id">Personal ID</TableHeader>
           <TableHeader name="organization">Organization</TableHeader>
-          <TableHeader name="username">Username</TableHeader>
-          <TableHeader name="password">Password</TableHeader>
+          <TableHeader name="username_prefix">Username Prefix</TableHeader>
+          <TableHeader name="email">Email Address</TableHeader>
           <TableHeader name="status"
             cellFormatter={ status => status.created && status.permissions_set ? 'Created' : 'Not created' }>
             Account Status

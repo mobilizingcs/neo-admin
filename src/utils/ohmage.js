@@ -5,6 +5,7 @@
  */
 
 import 'isomorphic-fetch';
+import AppError from './AppError';
 
 class Ohmage {
 	constructor( server_url, client, auth_token, keycloak_token ) {
@@ -52,13 +53,19 @@ class Ohmage {
 					return response.json( )
 							.then( body => {
 								if( body.result === 'success' ) {
-									return body.data;
+									return !!body.data ? body.data : true;
 								}
-							} )
+								else {
+									throw new AppError( 'ohmage', 'API response failed.', { body } );
+								}
+							} );
+				}
+				else {
+					throw new AppError( 'https', 'HTTPS error occurred.', response );
 				}
 			} )
 			.catch( exception => {
-				console.error( exception );
+				throw new AppError( 'ohmage_api', 'API call failed', null, exception );
 			} );
 	}
 
@@ -72,6 +79,14 @@ class Ohmage {
 
 	getLogs( parameters ) {
 		return this._call( '/audit/read', parameters );
+	}
+
+	userSetup( parameters ) {
+		return this._call( '/user/setup', parameters );
+	}
+
+	userUpdate( parameters ) {
+		return this._call( '/user/update', parameters );
 	}
 
 }

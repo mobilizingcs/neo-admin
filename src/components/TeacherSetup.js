@@ -22,7 +22,7 @@ class TeacherSetup extends React.Component {
 
   createAccounts( event ) {
     event.preventDefault( );
-    this.props.dispatch( createOhmageAccounts( ) );
+    this.props.dispatch( createOhmageAccounts( this.props.parsed_accounts ) );
   }
 
   render( ) {
