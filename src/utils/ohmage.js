@@ -81,6 +81,10 @@ class Ohmage {
 		return this._call( '/audit/read', parameters );
 	}
 
+	userCreate( parameters ) {
+		return this._call( '/user/create', parameters );
+	}
+
 	userSetup( parameters ) {
 		return this._call( '/user/setup', parameters );
 	}

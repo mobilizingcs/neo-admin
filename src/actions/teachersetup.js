@@ -6,6 +6,8 @@ export const PARSE_CSV = 'PARSE_CSV';
 export const UPDATE_CSV_VIEW = 'UPDATE_CSV_VIEW';
 export const CREATE_ACCOUNT_REQUEST = 'CREATE_ACCOUNTS';
 export const CREATE_ACCOUNT_RESPONSE = 'CREATE_ACCOUNT_RESPONSE';
+export const SET_PERMISSIONS_REQUEST = 'SET_PERMISSIONS_REQUEST';
+export const SET_PERMISSIONS_RESPONSE = 'SET_PERMISSIONS_RESPONSE';
 
 export function parseCsv( ) {
   return {
@@ -20,60 +22,77 @@ export function updateCsvView( parsed_accounts ) {
   };
 }
 
-function createAccount( account ) {
+function createAccount( account_index ) {
   return {
     type: CREATE_ACCOUNT_REQUEST,
-    account
+    account_index
   }
 }
 
-function createAccountResponse( response ) {
+function createAccountResponse( account_index, response ) {
   return {
     type: CREATE_ACCOUNT_RESPONSE,
+    account_index,
+    username: response.username,
+    password: response.password
+  }
+}
+
+function setPermissions( account_index ) {
+  return {
+    type: SET_PERMISSIONS_REQUEST,
+    account_index
+  }
+}
+
+function setPermissionsResponse( account_index, response ) {
+  return {
+    type: SET_PERMISSIONS_RESPONSE,
+    account_index,
     response
   }
 }
 
 // Thunks
 
-export function createOhmageAccounts( account_list ) {
+export function createAccountsAndSetPermissions( account_list ) {
   return dispatch => {
     for( let i = 0; i < account_list.length; i++ ) {
-      dispatch( createAccount( account_list[ i ] ) );
-      ohmage.userSetup( Object.assign( account_list[ i ], { status: '' } ) )
-        .catch( error => {
-          throw new AppError( 'action', 'API call failed', {
-            step: 'userSetup'
-          }, error );
-        })
-        .then( account => {
-          return ohmage.userUpdate( {
-            username: account.username,
-            new_account: true,
-            campaign_creation_privilege: true,
-            class_creation_privilege: true,
-            user_setup_privilege: true
-          } )
-          .catch( error => {
-            throw new AppError( 'action', 'API call failed', {
-              step: 'userUpdate'
-            }, error );
-          } );
-        } )
-        .then( permissions_set => {
-          if( permissions_set ) {
-            dispatch( createAccountResponse( true ) );
-          }
-        } )
-        .catch( error => {
-          if( error.layer === 'action' &&
-              error.props.step === 'userUpdate' ) {
-            // todo: report error for this step 
-            // resumehere + test if the above promise chain actually works!
-          }
+      ( (account, index) => {
+        dispatch( createAccount( index ) );
+        let params = Object.assign( { }, account, {
+          status_created: null,
+          status_permissions_set: null
         } );
+        ohmage.userSetup( params )
+          .catch( error => {
+            // todo: display error on screen
+            throw new AppError( 'action', 'API call failed', {
+              step: 'userSetup'
+            }, error );
+          })
+          .then( account => {
+            dispatch( createAccountResponse( index, account ) );
+            dispatch( setPermissions( index ) );
+            return ohmage.userUpdate( {
+                username: account.username,
+                new_account: true,
+                campaign_creation_privilege: true,
+                class_creation_privilege: true,
+                user_setup_privilege: true
+              } )
+              .catch( error => {
+                // todo: display error on screen
+                throw new AppError( 'action', 'API call failed', {
+                  step: 'userUpdate'
+                }, error );
+              } )
+              .then( permissions_set => {
+                dispatch( setPermissionsResponse( index, permissions_set ) );
+              } )
+          } );
+      } )( account_list[ i ], i );
     }
-    return;
   }
 }
 
@@ -92,10 +111,8 @@ export function parseCsvFile( file_object ) {
           organization: results[ i ][ 3 ],
           username_prefix: results[ i ][ 4 ],
           email_address: results[ i ][ 5 ],
-          status: {
-            created: false,
-            permissions_set: false
-          }
+          status_created: false,
+          status_permissions_set: false
         } );
       }
       dispatch( updateCsvView( accounts_to_create ) );

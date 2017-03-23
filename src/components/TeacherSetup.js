@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import {  Grid, Cell, Button } from 'react-mdl';
 
-import { parseCsvFile, createOhmageAccounts } from '../actions/teachersetup';
+import { parseCsvFile, createAccountsAndSetPermissions } from '../actions/teachersetup';
 import CSVPreview from './CSVPreview';
 
 
@@ -22,7 +22,7 @@ class TeacherSetup extends React.Component {
 
   createAccounts( event ) {
     event.preventDefault( );
-    this.props.dispatch( createOhmageAccounts( this.props.parsed_accounts ) );
+    this.props.dispatch( createAccountsAndSetPermissions( this.props.parsed_accounts ) );
   }
 
   render( ) {
