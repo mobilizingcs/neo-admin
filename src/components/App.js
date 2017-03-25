@@ -10,7 +10,7 @@ class AppComponent extends React.Component {
     return (
     	<div>
 		    <Layout fixedHeader fixedDrawer>
-		        <Header title="" />
+		        <Header title={this.props.children.props.route.title} />
 		        <Drawer title="Admin Tool">
 		            <Navigation>
 		                <Link activeClassName="is-active" to="/summary">Summary</Link>

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import { Grid, Cell, Button } from 'react-mdl';
 
-import { parseCsvFile, exportTeacherAccounts,
+import { parseCsvFile,
          createAccountsAndSetPermissions } from '../actions/teachersetup';
 import CSVPreview from './CSVPreview';
 
@@ -33,7 +33,33 @@ class TeacherSetup extends React.Component {
 
   exportCreatedAccounts( event ) {
     event.preventDefault( );
-    this.props.dispatch( exportTeacherAccounts( this.props.parsed_accounts, 'teacher_accounts.csv' ) );
+    let account_list = this.props.parsed_accounts;
+    let csv_file_content = 'data:text/csv;charset=utf-8,';
+    csv_file_content += 'First Name, Last Name, Personal ID, Organization, Email Address';
+    csv_file_content += ',Username,Password,Account,Permissions\n';
+    let rows = [ ];
+    for( let i = 0; i < account_list.length; i++ ) {
+      let row = [ ];
+      row.push( account_list[ i ].first_name );
+      row.push( account_list[ i ].last_name );
+      row.push( account_list[ i ].personal_id );
+      row.push( account_list[ i ].organization );
+      row.push( account_list[ i ].email_address );
+      row.push( account_list[ i ].username );
+      row.push( account_list[ i ].password );
+      row.push( account_list[ i ].status_created ? 'Created' : 'Not created' );
+      row.push( account_list[ i ].status_permissions_set ? 'Set' : 'Not set' );
+      rows.push( row.join( ',' ) );
+    }
+    csv_file_content += rows.join( '\n' );
+
+    let a = document.createElement( 'a' );
+    a.href = encodeURI( csv_file_content );
+    a.target = '_blank';
+    a.download = 'teacher_accounts.csv';
+    document.body.appendChild( a );
+    a.click( );
+    document.body.removeChild( a );
   }
 
   updateCsvFile( event ) {

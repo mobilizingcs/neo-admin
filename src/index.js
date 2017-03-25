@@ -20,13 +20,13 @@ ReactDOM.render((
   <Provider store={store}>
     <Router history={browserHistory}>
       <Route path="/" component={App}>
-      	<Route path="summary" component={Summary} />
+      	<Route path="summary" title="Summary" component={Summary} />
       	{/*<Route path="classes" component={Class} >
           <Route path="/class/new" component={CreateClass} />
         </Route>
       	<Route path="users" />*/}
-      	<Route path="audits" component={AuditConsole} />
-        <Route path="teacher-setup" component={TeacherSetup} />
+      	<Route path="audits" title="Audit Console" component={AuditConsole} />
+        <Route path="teacher-setup" title="Teacher Setup Wizard" component={TeacherSetup} />
       </Route>
     </Router>
   </Provider>

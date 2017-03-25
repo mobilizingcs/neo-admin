@@ -8,7 +8,6 @@ export const CREATE_ACCOUNT_REQUEST = 'CREATE_ACCOUNTS';
 export const CREATE_ACCOUNT_RESPONSE = 'CREATE_ACCOUNT_RESPONSE';
 export const SET_PERMISSIONS_REQUEST = 'SET_PERMISSIONS_REQUEST';
 export const SET_PERMISSIONS_RESPONSE = 'SET_PERMISSIONS_RESPONSE';
-export const EXPORT_TEACHER_ACCOUNTS = 'EXPORT_TEACHER_ACCOUNTS';
 
 export function parseCsv( ) {
   return {
@@ -57,35 +56,6 @@ function setPermissionsResponse( success, account_index ) {
 
 // Thunks
 
-export function exportTeacherAccounts( account_list, csv_file_name ) {
-  return dispatch => {
-    let csv_file_content = 'data:text/csv;charset=utf-8,';
-    csv_file_content += 'First Name, Last Name, Personal ID, Organization, Email Address';
-    csv_file_content += ',Username,Password,Account,Permissions\n';
-    let rows = [ ];
-    for( let i = 0; i < account_list.length; i++ ) {
-      let row = [ ];
-      row.push( account_list[ i ].first_name );
-      row.push( account_list[ i ].last_name );
-      row.push( account_list[ i ].personal_id );
-      row.push( account_list[ i ].organization );
-      row.push( account_list[ i ].email_address );
-      row.push( account_list[ i ].username );
-      row.push( account_list[ i ].password );
-      row.push( account_list[ i ].status_created ? 'Created' : 'Not created' );
-      row.push( account_list[ i ].status_permissions_set ? 'Set' : 'Not set' );
-      rows.push( row.join( ',' ) );
-    }
-    csv_file_content += rows.join( '\n' );
-    var a = document.createElement( 'a' );
-    a.href = encodeURI( csv_file_content );
-    a.target = '_blank';
-    a.download = csv_file_name;
-    document.body.appendChild( a );
-    a.click( );
-  };
-}
-
 export function createAccountsAndSetPermissions( account_list ) {
   return dispatch => {
     for( let i = 0; i < account_list.length; i++ ) {
@@ -98,10 +68,10 @@ export function createAccountsAndSetPermissions( account_list ) {
         ohmage.userSetup( params )
           .catch( error => {
             // todo: display error on screen
+            dispatch( createAccountResponse( false, index ) );
             throw new AppError( 'action', 'API call failed', {
               step: 'userSetup'
             }, error );
-            dispatch( createAccountResponse( false, index ) );
           })
           .then( account => {
             dispatch( createAccountResponse( true, index, account ) );
@@ -115,12 +85,12 @@ export function createAccountsAndSetPermissions( account_list ) {
               } )
               .catch( error => {
                 // todo: display error on screen
+                dispatch( setPermissionsResponse( false, index ) );
                 throw new AppError( 'action', 'API call failed', {
                   step: 'userUpdate'
                 }, error );
-                dispatch( setPermissionsResponse( false, index ) );
               } )
-              .then( permissions_set => {
+              .then( ( ) => {
                 dispatch( setPermissionsResponse( true, index ) );
               } )
           } );
