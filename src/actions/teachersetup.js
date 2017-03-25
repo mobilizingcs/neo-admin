@@ -8,6 +8,7 @@ export const CREATE_ACCOUNT_REQUEST = 'CREATE_ACCOUNTS';
 export const CREATE_ACCOUNT_RESPONSE = 'CREATE_ACCOUNT_RESPONSE';
 export const SET_PERMISSIONS_REQUEST = 'SET_PERMISSIONS_REQUEST';
 export const SET_PERMISSIONS_RESPONSE = 'SET_PERMISSIONS_RESPONSE';
+export const EXPORT_TEACHER_ACCOUNTS = 'EXPORT_TEACHER_ACCOUNTS';
 
 export function parseCsv( ) {
   return {
@@ -29,10 +30,11 @@ function createAccount( account_index ) {
   }
 }
 
-function createAccountResponse( account_index, response ) {
+function createAccountResponse( success, account_index, response ) {
   return {
     type: CREATE_ACCOUNT_RESPONSE,
     account_index,
+    success,
     username: response.username,
     password: response.password
   }
@@ -45,15 +47,44 @@ function setPermissions( account_index ) {
   }
 }
 
-function setPermissionsResponse( account_index, response ) {
+function setPermissionsResponse( success, account_index ) {
   return {
     type: SET_PERMISSIONS_RESPONSE,
-    account_index,
-    response
+    success,
+    account_index
   }
 }
 
 // Thunks
+
+export function exportTeacherAccounts( account_list, csv_file_name ) {
+  return dispatch => {
+    let csv_file_content = 'data:text/csv;charset=utf-8,';
+    csv_file_content += 'First Name, Last Name, Personal ID, Organization, Email Address';
+    csv_file_content += ',Username,Password,Account,Permissions\n';
+    let rows = [ ];
+    for( let i = 0; i < account_list.length; i++ ) {
+      let row = [ ];
+      row.push( account_list[ i ].first_name );
+      row.push( account_list[ i ].last_name );
+      row.push( account_list[ i ].personal_id );
+      row.push( account_list[ i ].organization );
+      row.push( account_list[ i ].email_address );
+      row.push( account_list[ i ].username );
+      row.push( account_list[ i ].password );
+      row.push( account_list[ i ].status_created ? 'Created' : 'Not created' );
+      row.push( account_list[ i ].status_permissions_set ? 'Set' : 'Not set' );
+      rows.push( row.join( ',' ) );
+    }
+    csv_file_content += rows.join( '\n' );
+    var a = document.createElement( 'a' );
+    a.href = encodeURI( csv_file_content );
+    a.target = '_blank';
+    a.download = csv_file_name;
+    document.body.appendChild( a );
+    a.click( );
+  };
+}
 
 export function createAccountsAndSetPermissions( account_list ) {
   return dispatch => {
@@ -70,9 +101,10 @@ export function createAccountsAndSetPermissions( account_list ) {
             throw new AppError( 'action', 'API call failed', {
               step: 'userSetup'
             }, error );
+            dispatch( createAccountResponse( false, index ) );
           })
           .then( account => {
-            dispatch( createAccountResponse( index, account ) );
+            dispatch( createAccountResponse( true, index, account ) );
             dispatch( setPermissions( index ) );
             return ohmage.userUpdate( {
                 username: account.username,
@@ -86,14 +118,15 @@ export function createAccountsAndSetPermissions( account_list ) {
                 throw new AppError( 'action', 'API call failed', {
                   step: 'userUpdate'
                 }, error );
+                dispatch( setPermissionsResponse( false, index ) );
               } )
               .then( permissions_set => {
-                dispatch( setPermissionsResponse( index, permissions_set ) );
+                dispatch( setPermissionsResponse( true, index ) );
               } )
           } );
       } )( account_list[ i ], i );
     }
-  }
+  };
 }
 
 export function parseCsvFile( file_object ) {
@@ -111,8 +144,8 @@ export function parseCsvFile( file_object ) {
           organization: results[ i ][ 3 ],
           username_prefix: results[ i ][ 4 ],
           email_address: results[ i ][ 5 ],
-          status_created: false,
-          status_permissions_set: false
+          status_created: 'waiting',
+          status_permissions_set: 'waiting'
         } );
       }
       dispatch( updateCsvView( accounts_to_create ) );

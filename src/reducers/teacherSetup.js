@@ -7,7 +7,9 @@ const initialState = {
   parsed_accounts: [ ],
   creating: 0,
   setting_permissions: 0,
-  is_parsing: false
+  created: 0,
+  permissions_set: 0,
+  account_creation_attempted: false
 };
 
 function updateState( state, action ) {
@@ -17,28 +19,32 @@ function updateState( state, action ) {
 
   switch( action.type ) {
     case PARSE_CSV:
-      return Object.assign( { }, state, {
-        is_parsing: true
-      } );
+      // todo: perhaps reset parsed_accounts if doing a force parse?
+      return Object.assign( { }, state );
     case UPDATE_CSV_VIEW:
       return Object.assign( { }, state, {
-        is_parsing: false,
         parsed_accounts: action.parsed_accounts
       } );
     case CREATE_ACCOUNT_REQUEST:
       return Object.assign( { }, state, {
+        account_creation_attempted: true,
         creating: state.creating + 1
       } );
     case CREATE_ACCOUNT_RESPONSE:
       return Object.assign( { }, state, {
         creating: state.creating - 1,
+        created: action.success ? state.created + 1 : state.created,
         parsed_accounts: state.parsed_accounts.map( ( item, index ) => {
           if( index === action.account_index ) {
-            return Object.assign( { }, item, {
-              status_created: true,
-              username: action.username,
-              password: action.password
-            } );
+            const object = {
+              status_created: 'failure'
+            };
+            if( action.success ) {
+              object.status_created = 'success';
+              object.username = action.username;
+              object.password = action.password;
+            }
+            return Object.assign( { }, item, object );
           }
           else {
             return item;
@@ -52,10 +58,11 @@ function updateState( state, action ) {
     case SET_PERMISSIONS_RESPONSE:
       return Object.assign( { }, state, {
         setting_permissions: state.setting_permissions - 1,
+        permissions_set: action.success ? state.permissions_set + 1 : state.permissions_set,
         parsed_accounts: state.parsed_accounts.map( ( item, index ) => {
           if( index === action.account_index ) {
             return Object.assign( { }, item, {
-              status_permissions_set: action.response
+              status_permissions_set: action.success ? 'success' : 'failure'
             } );
           }
           else {
