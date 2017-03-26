@@ -90,7 +90,10 @@ class TeacherSetup extends React.Component {
           </Cell>
           <Cell col={2}>
             3.<Button colored raised type='button' onClick={this.createAccounts}
-            disabled={this.props.parsed_accounts.length === 0}>
+            disabled={
+              this.props.parsed_accounts.length === 0 ||
+              ( this.props.creating > 0 || this.props.setting_permissions > 0 )
+            }>
                 Create Accounts
               </Button>
           </Cell>

@@ -1,6 +1,7 @@
 import ohmage from '../utils/ohmage-wrapper';
 import AppError from '../utils/AppError';
 import Papa from 'papaparse';
+import { showProgressBar, hideProgressBar } from './progressbar';
 
 export const PARSE_CSV = 'PARSE_CSV';
 export const UPDATE_CSV_VIEW = 'UPDATE_CSV_VIEW';
@@ -30,13 +31,16 @@ function createAccount( account_index ) {
 }
 
 function createAccountResponse( success, account_index, response ) {
-  return {
+  const action = {
     type: CREATE_ACCOUNT_RESPONSE,
     account_index,
-    success,
-    username: response.username,
-    password: response.password
+    success
+  };
+  if( success ) {
+    action.username = response.username;
+    action.password = response.password;
   }
+  return action;
 }
 
 function setPermissions( account_index ) {
@@ -58,44 +62,56 @@ function setPermissionsResponse( success, account_index ) {
 
 export function createAccountsAndSetPermissions( account_list ) {
   return dispatch => {
-    for( let i = 0; i < account_list.length; i++ ) {
-      ( (account, index) => {
-        dispatch( createAccount( index ) );
-        let params = Object.assign( { }, account, {
-          status_created: null,
-          status_permissions_set: null
+    const task = (account, index, dispatch) => {
+      dispatch( createAccount( index ) );
+      let params = Object.assign( { }, account, {
+        status_created: null,
+        status_permissions_set: null
+      } );
+      const promise_to_return = ohmage.userSetup( params )
+        .catch( error => {
+          // todo: display error on screen
+          dispatch( createAccountResponse( false, index ) );
+          throw new AppError( 'action', 'API call failed', {
+            step: 'userSetup'
+          }, error );
+        })
+        .then( account => {
+          dispatch( createAccountResponse( true, index, account ) );
+          dispatch( setPermissions( index ) );
+          return ohmage.userUpdate( {
+              username: account.username,
+              new_account: true,
+              campaign_creation_privilege: true,
+              class_creation_privilege: true,
+              user_setup_privilege: true
+            } )
+            .catch( error => {
+              // todo: display error on screen
+              dispatch( setPermissionsResponse( false, index ) );
+              throw new AppError( 'action', 'API call failed', {
+                step: 'userUpdate'
+              }, error );
+            } )
+            .then( ( ) => {
+              dispatch( setPermissionsResponse( true, index ) );
+            } )
         } );
-        ohmage.userSetup( params )
-          .catch( error => {
-            // todo: display error on screen
-            dispatch( createAccountResponse( false, index ) );
-            throw new AppError( 'action', 'API call failed', {
-              step: 'userSetup'
-            }, error );
-          })
-          .then( account => {
-            dispatch( createAccountResponse( true, index, account ) );
-            dispatch( setPermissions( index ) );
-            return ohmage.userUpdate( {
-                username: account.username,
-                new_account: true,
-                campaign_creation_privilege: true,
-                class_creation_privilege: true,
-                user_setup_privilege: true
-              } )
-              .catch( error => {
-                // todo: display error on screen
-                dispatch( setPermissionsResponse( false, index ) );
-                throw new AppError( 'action', 'API call failed', {
-                  step: 'userUpdate'
-                }, error );
-              } )
-              .then( ( ) => {
-                dispatch( setPermissionsResponse( true, index ) );
-              } )
-          } );
-      } )( account_list[ i ], i );
+        // We create a wrapper to contain the rejected promise.. to avoid
+        // the fail-fast behaviour of Promise.all
+        return promise_to_return.catch( error => error );
+    };
+
+    let tasks = [ ];
+    console.log(showProgressBar( true ));
+    dispatch( showProgressBar( true ) );
+    for( let i = 0; i < account_list.length; i++ ) {
+      tasks.push( task( account_list[ i ], i, dispatch ) );
     }
+    return Promise.all( tasks )
+      .then( ( ) => {
+        dispatch( hideProgressBar( ) );
+      } );
   };
 }
 

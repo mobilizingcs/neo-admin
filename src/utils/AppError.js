@@ -5,6 +5,7 @@ class AppError extends Error {
     this.layer = layer;
     this.props = props;
     this.parent = parent;
+    console.error( this );
   }
 }
 
