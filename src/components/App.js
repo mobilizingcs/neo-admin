@@ -3,6 +3,7 @@ import { Layout, Header, Drawer, Navigation, Content } from 'react-mdl';
 import { Link } from 'react-router';
 
 import AppProgressBar from './AppProgressBar';
+import Notification from './Notification';
 
 import 'react-mdl/extra/material.css';
 import 'react-mdl/extra/material.js';
@@ -23,6 +24,7 @@ class AppComponent extends React.Component {
                     <Link activeClassName="is-active" to="/audits">Audit Console</Link>
                 </Navigation>
             </Drawer>
+            <Notification />
             <Content>
                 {this.props.children}
             </Content>

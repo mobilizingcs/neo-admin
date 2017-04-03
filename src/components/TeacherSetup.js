@@ -5,6 +5,9 @@ import { Grid, Cell, Button } from 'react-mdl';
 
 import { parseCsvFile,
          createAccountsAndSetPermissions } from '../actions/teachersetup';
+
+import { flashNotification } from '../actions/notification';
+
 import CSVPreview from './CSVPreview';
 
 
@@ -19,6 +22,13 @@ class TeacherSetup extends React.Component {
     this.createAccounts = this.createAccounts.bind( this );
     this.exportCreatedAccounts = this.exportCreatedAccounts.bind( this );
     this.updateCsvFile = this.updateCsvFile.bind( this );
+
+    this.doIt = this.doIt.bind(this);
+  }
+
+  doIt( event ) {
+        this.props.dispatch( flashNotification( 'whywhywhywhywhywhywhywhywhywhywhywhywhywhy') );
+
   }
 
   scanCsvFile( event ) {
@@ -72,6 +82,7 @@ class TeacherSetup extends React.Component {
       <div>
         <Grid>
           <Cell col={12}>
+          <Button onClick={this.doIt}>do it</Button>
             <p>
             To get started, select the CSV file to import and click the button
             to scan the CSV file.
@@ -79,7 +90,7 @@ class TeacherSetup extends React.Component {
           </Cell>
         </Grid>
         <Grid>
-          <Cell col={2}>
+          <Cell col={3}>
             1.<input type="file" id="csv_file" onChange={this.updateCsvFile} />
           </Cell>
           <Cell col={2}>
@@ -97,7 +108,7 @@ class TeacherSetup extends React.Component {
                 Create Accounts
               </Button>
           </Cell>
-          <Cell col={2}>
+          <Cell col={3}>
             4.<Button colored raised type='button' onClick={this.exportCreatedAccounts}
             disabled={
               (this.props.created === 0 && this.props.permissions_set === 0)
