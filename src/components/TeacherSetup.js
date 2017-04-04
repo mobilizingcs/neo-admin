@@ -27,8 +27,7 @@ class TeacherSetup extends React.Component {
   }
 
   doIt( event ) {
-        this.props.dispatch( flashNotification( 'whywhywhywhywhywhywhywhywhywhywhywhywhywhy') );
-
+    this.props.dispatch( flashNotification( 'whywhywhywhywhywhywhywhywhywhywhywhywhywhy') );
   }
 
   scanCsvFile( event ) {

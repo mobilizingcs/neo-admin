@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import { Router, Route, browserHistory } from 'react-router';
 import { Provider } from 'react-redux';
 import configureStore from './configureStore';
+import injectTapEventPlugin from 'react-tap-event-plugin';
 
 import App from './components/App';
 import Summary from './components/Summary';
@@ -13,6 +14,7 @@ import Summary from './components/Summary';
 import AuditConsole from './components/AuditConsole';
 import TeacherSetup from './components/TeacherSetup';
 
+injectTapEventPlugin();
 const store = configureStore( );
 
 // Render the main component into the dom

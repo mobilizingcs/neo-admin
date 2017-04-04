@@ -1,14 +1,13 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { Snackbar } from 'react-mdl';
+import { Snackbar } from 'material-ui';
 
 import { clearNotification } from '../actions/notification';
 
 class Notification extends React.Component {
   constructor( ) {
     super( );
-
     this.handleTimeout = this.handleTimeout.bind( this );
   }
 
@@ -19,9 +18,12 @@ class Notification extends React.Component {
   render( ) {
     if( this.props.notifications.length > 0 ) {
       return (
-      <Snackbar active={true} onTimeout={this.handleTimeout}>
-        {this.props.notifications[0].text}
-      </Snackbar> );
+       <Snackbar
+        open={true}
+        autoHideDuration={1000}
+        message={this.props.notifications[0].text}
+        onRequestClose={this.handleTimeout}
+      />);
     }
     return null;
   }
