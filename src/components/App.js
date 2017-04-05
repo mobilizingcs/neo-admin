@@ -13,8 +13,8 @@ import 'react-mdl/extra/material.js';
 
 const menu_items = [
   { text: 'Summary', icon: <AvWeb />, link: '/summary' },
-  { text: 'Users', icon: <SocialGroup />, link: '/users' },
-  { text: 'Classes', icon: <SocialSchool />, link: '/classes' },
+  //{ text: 'Users', icon: <SocialGroup />, link: '/users' },
+  //{ text: 'Classes', icon: <SocialSchool />, link: '/classes' },
   { text: 'Teacher Setup', icon: <ActionSupervisorAccount />, link: '/teacher-setup' }
 ];
 
