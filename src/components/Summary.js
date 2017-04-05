@@ -31,7 +31,7 @@ class SummaryComponent extends React.Component {
           <TableBody displayRowCheckbox={false}>
             {summary.preferences.map( object => {
               return (
-                <TableRow>
+                <TableRow key={object.key}>
                   <TableRowColumn>{object.key}</TableRowColumn>
                   <TableRowColumn>{object.value}</TableRowColumn>
                 </TableRow>

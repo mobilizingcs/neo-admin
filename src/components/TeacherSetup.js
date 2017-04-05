@@ -1,15 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { Grid, Cell, Button } from 'react-mdl';
+import {  Step,
+          Stepper,
+          StepLabel,
+          RaisedButton } from 'material-ui';
 
 import { parseCsvFile,
-         createAccountsAndSetPermissions } from '../actions/teachersetup';
-
-import { flashNotification } from '../actions/notification';
+         createAccountsAndSetPermissions,
+         resetState } from '../actions/teachersetup';
 
 import CSVPreview from './CSVPreview';
-
 
 class TeacherSetup extends React.Component {
 
@@ -22,12 +23,18 @@ class TeacherSetup extends React.Component {
     this.createAccounts = this.createAccounts.bind( this );
     this.exportCreatedAccounts = this.exportCreatedAccounts.bind( this );
     this.updateCsvFile = this.updateCsvFile.bind( this );
-
-    this.doIt = this.doIt.bind(this);
+    this.restartProcess = this.restartProcess.bind( this );
+    this.removeCsvFile = this.removeCsvFile.bind( this );
   }
 
-  doIt( event ) {
-    this.props.dispatch( flashNotification( 'whywhywhywhywhywhywhywhywhywhywhywhywhywhy') );
+  removeCsvFile( ) {
+    this.props.dispatch( resetState( ) );
+  }
+
+  restartProcess( ) {
+    if( confirm( 'Have you exported the CSV file? Click Cancel to go back to save the file.' ) ) {
+      this.props.dispatch( resetState( ) );
+    }
   }
 
   scanCsvFile( event ) {
@@ -76,55 +83,93 @@ class TeacherSetup extends React.Component {
     this.forceUpdate( );
   }
 
-  render( ) {
-    return (
-      <div>
-        <Grid>
-          <Cell col={12}>
-          <Button onClick={this.doIt}>do it</Button>
-            <p>
+  renderStep( step ) {
+    switch( step ) {
+      case 0:
+      return (
+        <div>
+          <p>
             To get started, select the CSV file to import and click the button
             to scan the CSV file.
-            </p>
-          </Cell>
-        </Grid>
-        <Grid>
-          <Cell col={3}>
-            1.<input type="file" id="csv_file" onChange={this.updateCsvFile} />
-          </Cell>
-          <Cell col={2}>
-            2.<Button colored raised type='button' onClick={this.scanCsvFile}
-            disabled={!this.csv_file_selected}>
-                Scan CSV file
-              </Button>
-          </Cell>
-          <Cell col={2}>
-            3.<Button colored raised type='button' onClick={this.createAccounts}
+          </p>
+          <input type="file" id="csv_file" onChange={this.updateCsvFile} />
+          <RaisedButton label='Scan CSV File' primary={true} type='button'
+            onClick={this.scanCsvFile} />
+        </div>
+      );
+      case 1:
+      return (
+        <div>
+          <RaisedButton label='Create Accounts' primary={true} type='button'
             disabled={
               this.props.parsed_accounts.length === 0 ||
               ( this.props.creating > 0 || this.props.setting_permissions > 0 )
-            }>
-                Create Accounts
-              </Button>
-          </Cell>
-          <Cell col={3}>
-            4.<Button colored raised type='button' onClick={this.exportCreatedAccounts}
-            disabled={
-              (this.props.created === 0 && this.props.permissions_set === 0)
-              || (this.props.creating > 0 || this.props.setting_permissions > 0 )
-            }>
-                Export Created Accounts
-              </Button>
-          </Cell>
-        </Grid>
-        <CSVPreview parsed_accounts={this.props.parsed_accounts} />
+            }
+            onClick={this.createAccounts} />
+          <RaisedButton label='Reupload CSV File' secondary={true} type='button'
+            onClick={this.removeCsvFile} />
+          <CSVPreview parsed_accounts={this.props.parsed_accounts} />
+        </div>
+      );
+      case 2:
+      return (
+        <div>
+          <RaisedButton label='Export Created Accounts' primary={true} type='button'
+          onClick={this.exportCreatedAccounts} />
+          <RaisedButton label='Restart Process' secondary={true} type='button'
+          onClick={this.restartProcess} />
+          <CSVPreview parsed_accounts={this.props.parsed_accounts} />
+        </div>
+      );
+    }
+  }
+
+  render( ) {
+    const contentStyle = {margin: '0 16px'};
+    const activeStep = this.props.step;
+
+    return (
+      <div style={{width: '100%', margin: 'auto'}}>
+        <Stepper activeStep={activeStep}>
+          <Step>
+            <StepLabel>Upload a CSV file</StepLabel>
+          </Step>
+          <Step>
+            <StepLabel>Preview New Accounts</StepLabel>
+          </Step>
+          <Step>
+            <StepLabel>Export Created Accounts</StepLabel>
+          </Step>
+        </Stepper>
+        <div style={contentStyle}>
+          { this.renderStep( activeStep ) }
+        </div>
       </div>
     );
   }
 }
 
+function getStepBasedOnState( state ) {
+  if( state.parsed_accounts.length === 0 ) {
+    // if there are no parsed accounts, we are in step 0
+    return 0;
+  }
+  else if( state.parsed_accounts.length > 0 ) {
+    // if there are parsed accounts,
+    if( state.creating === 0 && state.setting_permissions === 0 ) {
+      // and there is no ongoing work,
+      if( state.created > 0 || state.permissions_set > 0 ) {
+        // and some work is already done, we are in step 2 (the final step)
+        return 2;
+      }
+    }
+    return 1;
+  }
+}
+
 const mapStateToProps = ( state ) => {
   return {
+    step: getStepBasedOnState( state.teacherSetup ),
     parsed_accounts: state.teacherSetup.parsed_accounts,
     created: state.teacherSetup.created,
     permissions_set: state.teacherSetup.permissions_set,

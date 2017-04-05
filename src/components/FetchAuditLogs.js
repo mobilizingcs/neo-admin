@@ -63,7 +63,6 @@ class FetchAuditLogs extends React.Component {
         <Textfield onChange={this.handleChange} name="to_date" label="To (Date)" />
         <Button type='submit'>Fetch</Button>
 			</form>
-       
 		);
 	}
 

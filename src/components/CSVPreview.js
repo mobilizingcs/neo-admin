@@ -1,6 +1,7 @@
 import React from 'react';
 
-import { Grid, Cell, DataTable, TableHeader, Icon } from 'react-mdl';
+import { Table, TableHeader, TableRow, TableHeaderColumn, TableBody, TableRowColumn } from 'material-ui';
+import { ActionDone, ActionHistory, AlertWarning } from 'material-ui/svg-icons';
 
 class CSVPreview extends React.Component {
 
@@ -10,55 +11,67 @@ class CSVPreview extends React.Component {
 
   render( ) {
     if( this.props.parsed_accounts.length < 1 ) {
-      return (<Grid><Cell col={12}>CSV Preview Window</Cell></Grid>);
+      return (<div>CSV Preview Window</div>);
     }
     return (
-      <Grid>
-        <Cell col={12}>
-          <DataTable rows={this.props.parsed_accounts}>
-            <TableHeader name="first_name">First Name</TableHeader>
-            <TableHeader name="last_name">Last Name</TableHeader>
-            <TableHeader name="personal_id">Personal ID</TableHeader>
-            <TableHeader name="organization">Organization</TableHeader>
-            <TableHeader name="username_prefix">Username Prefix</TableHeader>
-            <TableHeader name="email_address">Email Address</TableHeader>
-            <TableHeader name="status_created"
-              cellFormatter={
-                status_created => {
-                  if( status_created === 'success' ) {
-                    return (<span><Icon name="done" /> Created</span>);
-                  }
-                  else if( status_created === 'waiting' ) {
-                    return (<span><Icon name="history" /> Waiting</span>);
-                  }
-                  else {
-                    return (<span><Icon name="warning" /> Failed</span>);
-                  }
-                }
-              }>
-              Account Status
-            </TableHeader>
-            <TableHeader name="status_permissions_set"
-              cellFormatter={
-                status_permissions_set => {
-                  if( status_permissions_set === 'success' ) {
-                    return (<span><Icon name="done" /> Set</span>);
-                  }
-                  else if( status_permissions_set === 'waiting' ) {
-                    return (<span><Icon name="history" /> Waiting</span>);
-                  }
-                  else {
-                    return (<span><Icon name="warning" /> Failed</span>);
-                  }
-                }
-              }>
-              Permissions Status
-            </TableHeader>
-            <TableHeader name="username">Username</TableHeader>
-            <TableHeader name="password">Password</TableHeader>
-          </DataTable>
-        </Cell>
-      </Grid>
+      <div>
+        <Table selectable={false}>
+          <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
+            <TableRow>
+              <TableHeaderColumn>First Name</TableHeaderColumn>
+              <TableHeaderColumn>Last Name</TableHeaderColumn>
+              <TableHeaderColumn>Personal ID</TableHeaderColumn>
+              <TableHeaderColumn>Organization</TableHeaderColumn>
+              <TableHeaderColumn>Username Prefix</TableHeaderColumn>
+              <TableHeaderColumn>Email Address</TableHeaderColumn>
+              <TableHeaderColumn>Account Status</TableHeaderColumn>
+              <TableHeaderColumn>Permissions Status</TableHeaderColumn>
+              <TableHeaderColumn>Username</TableHeaderColumn>
+              <TableHeaderColumn>Password</TableHeaderColumn>
+            </TableRow>
+          </TableHeader>
+          <TableBody displayRowCheckbox={false}>
+            {this.props.parsed_accounts.map( (account, index) => {
+              let account_status;
+              if( account.status_created === 'success' ) {
+                account_status = (<span><ActionDone /> Created</span>);
+              }
+              else if( account.status_created === 'waiting' ) {
+                account_status = (<span><ActionHistory /> Waiting</span>);
+              }
+              else {
+                account_status = (<span><AlertWarning /> Failed</span>);
+              }
+
+              let account_permissions;
+              if( account.status_permissions_set === 'success' ) {
+                account_permissions = <span><ActionDone /> Set</span>;
+              }
+              else if( account.status_permissions_set === 'waiting' ) {
+                account_permissions = <span><ActionHistory /> Waiting</span>;
+              }
+              else {
+                account_permissions = <span><AlertWarning /> Failed</span>;
+              }
+
+              return (
+                <TableRow key={index}>
+                  <TableRowColumn>{account.first_name}</TableRowColumn>
+                  <TableRowColumn>{account.last_name}</TableRowColumn>
+                  <TableRowColumn>{account.personal_id}</TableRowColumn>
+                  <TableRowColumn>{account.organization}</TableRowColumn>
+                  <TableRowColumn>{account.username_prefix}</TableRowColumn>
+                  <TableRowColumn>{account.email_address}</TableRowColumn>
+                  <TableRowColumn>{account_status}</TableRowColumn>
+                  <TableRowColumn>{account_permissions}</TableRowColumn>
+                  <TableRowColumn>{account.username}</TableRowColumn>
+                  <TableRowColumn>{account.password}</TableRowColumn>
+                </TableRow>
+              );
+            } )}
+          </TableBody>
+        </Table>
+      </div>
       );
   }
 

@@ -1,7 +1,10 @@
-import { PARSE_CSV, UPDATE_CSV_VIEW,
-  CREATE_ACCOUNT_REQUEST, CREATE_ACCOUNT_RESPONSE,
-  SET_PERMISSIONS_REQUEST, SET_PERMISSIONS_RESPONSE }
-  from '../actions/teachersetup';
+import {  PARSE_CSV,
+          RESET_STATE,
+          UPDATE_CSV_VIEW,
+          CREATE_ACCOUNT_REQUEST,
+          CREATE_ACCOUNT_RESPONSE,
+          SET_PERMISSIONS_REQUEST,
+          SET_PERMISSIONS_RESPONSE } from '../actions/teachersetup';
 
 const initialState = {
   parsed_accounts: [ ],
@@ -70,6 +73,8 @@ function updateState( state, action ) {
           }
         } )
       } );
+    case RESET_STATE:
+      return initialState;
     default:
       return state;
   }

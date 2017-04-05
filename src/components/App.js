@@ -8,7 +8,7 @@ import LeftDrawer from './templates/LeftDrawer';
 import Theme from '../styles/theme';
 
 import AppProgressBar from './AppProgressBar';
-import Notification from './Notification';
+import Notifications from './Notifications';
 import 'react-mdl/extra/material.js';
 
 const menu_items = [
@@ -35,10 +35,10 @@ class AppComponent extends React.Component {
         <MuiThemeProvider muiTheme={Theme}>
           <div>
             <Header title={this.props.children.props.route.title} styles={{paddingLeft:248}}/>
-            <AppProgressBar />
             <LeftDrawer navDrawerOpen={true} menus={menu_items} />
-            <Notification />
+            <Notifications />
             <div style={this.styles.container}>
+              <AppProgressBar />
               <Paper style={{padding: 30, marginLeft: 1}}>
                 {this.props.children}
                 <div style={{clear: 'both'}}/>
