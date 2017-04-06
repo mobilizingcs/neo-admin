@@ -6,6 +6,10 @@ import {  TextField,
           MenuItem,
           SelectField } from 'material-ui';
 
+import {  Grid,
+          Row,
+          Col } from 'react-flexbox-grid';
+
 import { fetchLogs } from '../actions/auditconsole';
 
 class FetchAuditLogs extends React.Component {
@@ -59,22 +63,46 @@ class FetchAuditLogs extends React.Component {
 
   render( ) {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <TextField onChange={this.handleTextChange} name="uri" floatingLabelText="URI" />
-        <TextField onChange={this.handleTextChange} name="client_value" floatingLabelText="Client" />
-        <TextField onChange={this.handleTextChange} name="device_id" floatingLabelText="Device ID" />
-        <SelectField
-          floatingLabelText="Request Result"
-          value={this.state.form.request_result}
-          onChange={this.handleSelectChange} >
-          <MenuItem value={null} primaryText="" />
-          <MenuItem value={'success'} primaryText="Success" />
-          <MenuItem value={'failure'} primaryText="Failure" />
-        </SelectField>
-        <TextField onChange={this.handleTextChange} name="from_date" floatingLabelText="From (Date)" />
-        <TextField onChange={this.handleTextChange} name="to_date" floatingLabelText="To (Date)" />
-        <RaisedButton type='submit' label='Fetch' />
-      </form>
+      <Grid fluid>
+        <form onSubmit={this.handleSubmit}>
+          <Row around="xs">
+            <Col>
+              <TextField onChange={this.handleTextChange} name="uri" floatingLabelText="URI" />
+            </Col>
+            <Col>
+              <TextField onChange={this.handleTextChange} name="client_value" floatingLabelText="Client" />
+            </Col>
+          </Row>
+          <Row around="xs">
+            <Col>
+              <TextField onChange={this.handleTextChange} name="device_id" floatingLabelText="Device ID" />
+            </Col>
+            <Col>
+              <SelectField
+                floatingLabelText="Request Result"
+                value={this.state.form.request_result}
+                onChange={this.handleSelectChange} >
+                <MenuItem value={null} primaryText="" />
+                <MenuItem value={'success'} primaryText="Success" />
+                <MenuItem value={'failure'} primaryText="Failure" />
+              </SelectField>
+            </Col>
+          </Row>
+          <Row around="xs">
+            <Col>
+              <TextField onChange={this.handleTextChange} name="from_date" floatingLabelText="From (Date)" />
+            </Col>
+            <Col>
+              <TextField onChange={this.handleTextChange} name="to_date" floatingLabelText="To (Date)" />
+            </Col>
+          </Row>
+          <Row end="xs">
+            <Col>
+              <RaisedButton type='submit' primary={true} label='Fetch' />
+            </Col>
+          </Row>
+        </form>
+      </Grid>
     );
   }
 
