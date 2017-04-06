@@ -1,41 +1,51 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import { Textfield, Button } from 'react-mdl';
+import {  TextField,
+          RaisedButton,
+          MenuItem,
+          SelectField } from 'material-ui';
 
 import { fetchLogs } from '../actions/auditconsole';
 
 class FetchAuditLogs extends React.Component {
 
-	constructor( props ) {
-		super( props );
+  constructor( props ) {
+    super( props );
     this.state = {
       form: {
-        uri: '/app/',
+        uri: '',
         client_value: '',
         device_id: '',
-        request_result: '',
+        request_result: null,
         from_date: '',
         to_date: ''
-
       }
     };
 
     this.handleSubmit = this.handleSubmit.bind( this );
-    this.handleChange = this.handleChange.bind( this );
-	}
+    this.handleTextChange = this.handleTextChange.bind( this );
+    this.handleSelectChange = this.handleSelectChange.bind( this );
+  }
 
   handleSubmit( event ) {
     event.preventDefault( );
-    const { dispatch } = this.props;
-    dispatch( fetchLogs( this.state.form ) );
+    this.props.dispatch( fetchLogs( this.state.form ) );
   }
 
-  handleFetchButton( ) {
-
+  handleFetchButton(  ) {
   }
 
-  handleChange( event ) {
+  handleSelectChange( event, index, value ) {
+    this.setState({
+      form: {
+        ...this.state.form,
+        request_result: value
+      }
+    });
+  }
+
+  handleTextChange( event ) {
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
@@ -47,24 +57,26 @@ class FetchAuditLogs extends React.Component {
     });
   }
 
-	render( ) {
-		return (
-		  <form onSubmit={this.handleSubmit}>
-			  <Textfield onChange={this.handleChange} name="uri" label="URI" />
-        <Textfield onChange={this.handleChange} name="client_value" label="Client" />
-        <Textfield onChange={this.handleChange} name="device_id" label="Device ID" />
-        <label>Request Result: </label>
-        <select value={this.state.request_result} onChange={this.handleChange} name="request_result">
-          <option value="">any</option>
-          <option value="success">Success</option>
-          <option value="failure">Failure</option>
-        </select>
-        <Textfield onChange={this.handleChange} name="from_date" label="From (Date)" />
-        <Textfield onChange={this.handleChange} name="to_date" label="To (Date)" />
-        <Button type='submit'>Fetch</Button>
-			</form>
-		);
-	}
+  render( ) {
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <TextField onChange={this.handleTextChange} name="uri" floatingLabelText="URI" />
+        <TextField onChange={this.handleTextChange} name="client_value" floatingLabelText="Client" />
+        <TextField onChange={this.handleTextChange} name="device_id" floatingLabelText="Device ID" />
+        <SelectField
+          floatingLabelText="Request Result"
+          value={this.state.form.request_result}
+          onChange={this.handleSelectChange} >
+          <MenuItem value={null} primaryText="" />
+          <MenuItem value={'success'} primaryText="Success" />
+          <MenuItem value={'failure'} primaryText="Failure" />
+        </SelectField>
+        <TextField onChange={this.handleTextChange} name="from_date" floatingLabelText="From (Date)" />
+        <TextField onChange={this.handleTextChange} name="to_date" floatingLabelText="To (Date)" />
+        <RaisedButton type='submit' label='Fetch' />
+      </form>
+    );
+  }
 
 }
 

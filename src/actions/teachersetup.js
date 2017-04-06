@@ -146,7 +146,7 @@ export function parseCsvFile( file_object ) {
         }
         dispatch( updateCsvView( accounts_to_create ) );
       },
-      error: error => {
+      error: ( ) => {
         dispatch( flashNotification( 'Unable to parse the CSV file.' ) );
       } } )
     }

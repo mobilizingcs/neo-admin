@@ -5,6 +5,7 @@ import { Router, Route, browserHistory } from 'react-router';
 import { Provider } from 'react-redux';
 import configureStore from './configureStore';
 import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();
 
 import App from './components/App';
 import Summary from './components/Summary';
@@ -14,7 +15,6 @@ import Summary from './components/Summary';
 import AuditConsole from './components/AuditConsole';
 import TeacherSetup from './components/TeacherSetup';
 
-injectTapEventPlugin();
 const store = configureStore( );
 
 // Render the main component into the dom
@@ -27,7 +27,7 @@ ReactDOM.render((
           <Route path="/class/new" component={CreateClass} />
         </Route>
       	<Route path="users" />*/}
-      	<Route path="audits" title="Audit Console" component={AuditConsole} />
+      	<Route path="audit-console" title="Audit Console" component={AuditConsole} />
         <Route path="teacher-setup" title="Teacher Setup Wizard" component={TeacherSetup} />
       </Route>
     </Router>

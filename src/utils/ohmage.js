@@ -53,7 +53,7 @@ class Ohmage {
           return response.json( )
               .then( body => {
                 if( body.result === 'success' ) {
-                  return !!body.data ? body.data : true;
+                  return !!body.data ? body.data : body;
                 }
                 else {
                   throw new AppError( 'ohmage', 'API response failed.', { body } );

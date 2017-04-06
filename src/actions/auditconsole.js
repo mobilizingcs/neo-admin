@@ -1,7 +1,15 @@
 import ohmage from '../utils/ohmage-wrapper';
+import Dexie from 'dexie';
+
+const db = new Dexie( 'ohmage_admin' );
+db.version( 1 ).stores( {
+  audit_logs: '++, uri, received_millis, response.result, *extra_data.user'
+} );
 
 export const REQUEST_LOGS = 'REQUEST_LOGS';
 export const RECEIVE_LOGS = 'RECEIVE_LOGS';
+export const REQUEST_LOCAL_LOGS_STATE = 'REQUEST_LOCAL_LOGS_STATE';
+export const RECEIVE_LOCAL_LOGS_STATE = 'RECEIVE_LOCAL_LOGS_STATE';
 
 export function requestLogs( parameters ) {
   return {
@@ -17,13 +25,44 @@ export function receiveLogs( json ) {
   };
 }
 
+function requestLocalLogsState( ) {
+  return {
+    type: REQUEST_LOCAL_LOGS_STATE
+  };
+}
+
+function receiveLocalLogsState( state ) {
+  return {
+    type: RECEIVE_LOCAL_LOGS_STATE,
+    state
+  };
+}
+
+// Thunks
+export function fetchLocalLogsState( ) {
+  return dispatch => {
+    dispatch( requestLocalLogsState( ) );
+    db.audit_logs.count( )
+      .then( value => {
+        dispatch( receiveLocalLogsState( {
+          count: value
+        } ) );
+      } )
+  };
+}
+
 export function fetchLogs( parameters ) {
   return dispatch => {
     dispatch( requestLogs( parameters ) );
     return ohmage.getLogs( parameters )
-            .then( logs => {
-              console.log( logs );
-              return logs;
-            } )
-  }
+      .then( logs => {
+        for( let i = 0; i < logs.audits.length; i++ ) {
+          db.audit_logs.add( logs.audits[ i ] );
+        }
+      } )
+      .then( ( ) => {
+        dispatch( requestLogs( parameters ) );
+      } );
+  };
 }
+

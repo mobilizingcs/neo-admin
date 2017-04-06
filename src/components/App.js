@@ -1,7 +1,9 @@
 import React from 'react';
 
 import { Paper, MuiThemeProvider } from 'material-ui';
-import { SocialSchool, SocialGroup, AvWeb, ActionSupervisorAccount } from 'material-ui/svg-icons';
+import {  AvWeb,
+          ActionSearch,
+          ActionSupervisorAccount } from 'material-ui/svg-icons';
 
 import Header from './templates/Header';
 import LeftDrawer from './templates/LeftDrawer';
@@ -9,13 +11,13 @@ import Theme from '../styles/theme';
 
 import AppProgressBar from './AppProgressBar';
 import Notifications from './Notifications';
-import 'react-mdl/extra/material.js';
 
 const menu_items = [
   { text: 'Summary', icon: <AvWeb />, link: '/summary' },
   //{ text: 'Users', icon: <SocialGroup />, link: '/users' },
   //{ text: 'Classes', icon: <SocialSchool />, link: '/classes' },
-  { text: 'Teacher Setup', icon: <ActionSupervisorAccount />, link: '/teacher-setup' }
+  { text: 'Teacher Setup', icon: <ActionSupervisorAccount />, link: '/teacher-setup' },
+  { text: 'Audit Console', icon: <ActionSearch />, link: '/audit-console'}
 ];
 
 
