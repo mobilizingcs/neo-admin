@@ -1,19 +1,21 @@
 import React from 'react';
 
 import {  ContentAdd,
-          ContentClear } from 'material-ui/svg-icons';
+          ContentClear,
+          ActionOpenInBrowser,
+          AvPlayCircleOutline } from 'material-ui/svg-icons';
 
 import {  Dialog,
           Popover,
           Menu,
+          Chip,
           IconMenu,
           IconButton,
           MenuItem,
           RaisedButton,
           Toolbar,
           ToolbarGroup,
-          ToolbarSeparator,
-          ToolbarTitle } from 'material-ui';
+          ToolbarSeparator } from 'material-ui';
 
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 
@@ -61,7 +63,9 @@ class AuditConsoleToolbar extends React.Component {
       <div>
         <Toolbar>
           <ToolbarGroup firstChild={true}>
-            <RaisedButton label='Use a recipe' onClick={this.handleTouchTapMenu} />
+            <RaisedButton label='Import a recipe'
+                          onClick={this.handleTouchTapMenu}
+                          icon={<ActionOpenInBrowser />} />
             <Popover  open={this.state.openMenu}
                       onRequestClose={this.handleRequestCloseMenu}
                       anchorEl={this.state.anchorEl}
@@ -71,10 +75,15 @@ class AuditConsoleToolbar extends React.Component {
                 <MenuItem value="1" primaryText="Find a user" />
               </Menu>
             </Popover>
+            <ToolbarSeparator />
+            <RaisedButton label='Execute'
+                          primary={true}
+                          onClick={this.props.onClickExecute}
+                          icon={<AvPlayCircleOutline />} />
+            <ToolbarSeparator />
           </ToolbarGroup>
           <ToolbarGroup>
-            <ToolbarTitle text={'Local Log Count: ' + this.props.count } />
-            <ToolbarSeparator />
+            <Chip>{'Local Log Count: ' + this.props.count }</Chip>
             <RaisedButton label='Append More Logs'
                           primary={true}
                           icon={<ContentAdd />}

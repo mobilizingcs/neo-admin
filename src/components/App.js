@@ -17,7 +17,7 @@ const menu_items = [
   //{ text: 'Users', icon: <SocialGroup />, link: '/users' },
   //{ text: 'Classes', icon: <SocialSchool />, link: '/classes' },
   { text: 'Teacher Setup', icon: <ActionSupervisorAccount />, link: '/teacher-setup' },
-  { text: 'Audit Console', icon: <ActionSearch />, link: '/audit-console'}
+  { text: 'Audit & API Console', icon: <ActionSearch />, link: '/audit-console'}
 ];
 
 

@@ -10,7 +10,7 @@ import {  Grid,
           Row,
           Col } from 'react-flexbox-grid';
 
-import { fetchLogs } from '../actions/auditconsole';
+import { fetchLogs } from '../../actions/auditconsole';
 
 class FetchAuditLogs extends React.Component {
 

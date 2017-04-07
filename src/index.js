@@ -12,7 +12,7 @@ import Summary from './components/Summary';
 //import Class from './components/Class';
 //import CreateClass from './components/CreateClass';
 
-import AuditConsole from './components/AuditConsole';
+import AuditConsole from './components/AuditConsole/AuditConsole';
 import TeacherSetup from './components/TeacherSetup';
 
 const store = configureStore( );
@@ -27,7 +27,7 @@ ReactDOM.render((
           <Route path="/class/new" component={CreateClass} />
         </Route>
       	<Route path="users" />*/}
-      	<Route path="audit-console" title="Audit Console" component={AuditConsole} />
+      	<Route path="audit-console" title="Audit & API Console" component={AuditConsole} />
         <Route path="teacher-setup" title="Teacher Setup Wizard" component={TeacherSetup} />
       </Route>
     </Router>

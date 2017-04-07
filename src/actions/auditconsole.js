@@ -1,10 +1,5 @@
 import ohmage from '../utils/ohmage-wrapper';
-import Dexie from 'dexie';
-
-const db = new Dexie( 'ohmage_admin' );
-db.version( 1 ).stores( {
-  audit_logs: '++, uri, received_millis, response.result, *extra_data.user'
-} );
+import db from '../utils/db';
 
 export const REQUEST_LOGS = 'REQUEST_LOGS';
 export const RECEIVE_LOGS = 'RECEIVE_LOGS';
