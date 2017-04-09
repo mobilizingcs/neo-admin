@@ -13,7 +13,7 @@ import Summary from './components/Summary';
 //import CreateClass from './components/CreateClass';
 
 import AuditConsole from './components/AuditConsole/AuditConsole';
-import TeacherSetup from './components/TeacherSetup';
+import TeacherSetup from './components/TeacherSetup/TeacherSetup';
 
 const store = configureStore( );
 

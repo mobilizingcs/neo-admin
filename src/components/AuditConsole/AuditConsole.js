@@ -12,7 +12,7 @@ import 'brace/theme/textmate';
 
 import AuditConsoleToolbar from './AuditConsoleToolbar';
 import OutputConsole from './OutputConsole';
-import { fetchLocalLogsState } from '../../actions/auditconsole';
+import { fetchLocalLogsState, clearLocalLogs } from '../../actions/auditconsole';
 
 class AuditConsole extends React.Component {
 
@@ -30,6 +30,10 @@ class AuditConsole extends React.Component {
       this.props.dispatch( fetchLocalLogsState( ) );
     }
   }
+
+  clearLocalLogs = ( ) => {
+    this.props.dispatch( clearLocalLogs( ) );
+  };
 
   updateCode = ( value ) => {
     this.setState( {
@@ -76,6 +80,7 @@ class AuditConsole extends React.Component {
           <Row>
             <Col xs>
               <AuditConsoleToolbar  onClickExecute={this.executeCode}
+                                    onClickClearLogs={this.clearLocalLogs}
                                     count={local_state.state.count} />
             </Col>
           </Row>

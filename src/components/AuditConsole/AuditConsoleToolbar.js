@@ -91,6 +91,7 @@ class AuditConsoleToolbar extends React.Component {
             <RaisedButton label='Clear Local Logs'
                           disabled={ this.props.count === 0 }
                           icon={<ContentClear />}
+                          onClick={this.props.onClickClearLogs}
                           secondary={true} />
             <IconMenu iconButtonElement={
                         <IconButton touch={true}>

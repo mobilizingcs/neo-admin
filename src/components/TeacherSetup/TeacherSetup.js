@@ -8,7 +8,7 @@ import {  Step,
 
 import { parseCsvFile,
          createAccountsAndSetPermissions,
-         resetState } from '../actions/teachersetup';
+         resetState } from '../../actions/teachersetup';
 
 import CSVPreview from './CSVPreview';
 

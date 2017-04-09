@@ -1,0 +1,13 @@
+.error_div {
+  background-color: rgb(255, 235, 238);
+  padding: 5px 8px;
+  border-bottom: 1px solid rgb(224, 224, 224);
+}
+.error_text {
+  color: rgb(183, 28, 28);
+  padding: 15px 0px;
+}
+.message_div {
+  padding: 5px 8px;
+  border-bottom: 1px solid rgb(224, 224, 224);
+}
