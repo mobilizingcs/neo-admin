@@ -7,6 +7,10 @@ import configureStore from './configureStore';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
+import { logUserIn } from 'actions/usersession';
+
+import ohmage from './utils/ohmage-wrapper';
+
 import App from './components/App';
 import Summary from './components/Summary';
 //import Class from './components/Class';
@@ -15,7 +19,22 @@ import Summary from './components/Summary';
 import AuditConsole from './components/AuditConsole/AuditConsole';
 import TeacherSetup from './components/TeacherSetup/TeacherSetup';
 
-const store = configureStore( );
+const store = configureStore( undefined, ( ) => {
+  console.log( 'Rehydrant called' );
+  const userSession = store.getState( ).userSession;
+  const auth_token = ohmage._getToken( );
+  // if the auth_token cookie is not empty,
+  if( !!auth_token ) {
+    // update the state with this token from cookie
+    store.dispatch( logUserIn( auth_token ) );
+  }
+  else {
+    // otherwise, update ohmageUtil with token from the state
+    ohmage._setToken( userSession.user_auth_token );
+  }
+} );
+// todo: add listener for ohmage wrapper/ohmage which is called in case
+// the ohmage token is invalidated by a request to the server
 
 // Render the main component into the dom
 ReactDOM.render((

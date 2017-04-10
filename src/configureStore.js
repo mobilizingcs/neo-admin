@@ -2,38 +2,34 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import thunkMiddleware from 'redux-thunk';
 import createLogger from 'redux-logger';
 import rootReducer from './reducers';
+import { persistStore, autoRehydrate } from 'redux-persist';
 
-function debounce(func, wait, immediate) {
-  var timeout;
-  return function() {
-    var context = this, args = arguments;
-    var later = function() {
-      timeout = null;
-      if (!immediate) func.apply(context, args);
-    };
-    var callNow = immediate && !timeout;
-    clearTimeout(timeout);
-    timeout = setTimeout(later, wait);
-    if (callNow) func.apply(context, args);
-  };
-}
+import utils from './utils/utils.js';
 
 import { batchedSubscribe } from 'redux-batched-subscribe';
 
 const loggerMiddleware = createLogger( );
 
-export default function configureStore(preloadedState) {
-  return createStore(
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+export default function configureStore( preloadedState, onRehydrate ) {
+  const store = createStore(
     rootReducer,
     preloadedState,
-    compose(
+    composeEnhancers(
       applyMiddleware(
         thunkMiddleware,
         loggerMiddleware
       ),
-      batchedSubscribe(debounce( (notify) => {
-        notify();
-      }, 100 ) )
+      batchedSubscribe( utils.debounce( notify => {
+        notify( );
+      }, 100 ) ),
+      autoRehydrate( )
     )
   );
+  persistStore( store, {
+    whitelist: [ 'userSession' ],
+    debounce: 200
+  }, onRehydrate );
+  return store;
 }

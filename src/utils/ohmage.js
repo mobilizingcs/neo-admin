@@ -13,9 +13,7 @@ class Ohmage {
     this.client = client || 'ohmage.js';
     this.auth_token = auth_token || null;
     this.keycloak_token = keycloak_token || null;
-    if( ( this.auth_token === null
-      && this.keycloak_token === null )
-      || !this.server_url ) {
+    if( !this.server_url ) {
       throw new Error('Invalid constructor parameters.');
     }
   }
@@ -31,6 +29,9 @@ class Ohmage {
     }
     else if( !!this.auth_token ) {
       data['auth_token'] = this.auth_token;
+    }
+    else {
+      throw new Error( 'auth_token not set' );
     }
 
     data[ 'client' ] = this.client;
@@ -69,8 +70,12 @@ class Ohmage {
       } );
   }
 
-  _updateToken( auth_token ) {
+  _setToken( auth_token ) {
     this.auth_token = auth_token;
+  }
+
+  _getToken( ) {
+    return this.auth_token;
   }
 
   whoAmI( ) {
@@ -95,6 +100,10 @@ class Ohmage {
 
   userUpdate( parameters ) {
     return this.__call( '/user/update', parameters );
+  }
+
+  userRead( users ) {
+    return this.__call( '/user/read', { user_list: users.join( ',' ) } );
   }
 
 }
