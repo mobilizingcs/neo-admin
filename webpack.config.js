@@ -29,4 +29,7 @@ function buildConfig(wantedEnv) {
   return config;
 }
 
+
+// todo: make independent/non-navbar version work with webpack-dev-server
+
 module.exports = buildConfig(env);

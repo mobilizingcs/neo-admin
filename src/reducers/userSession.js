@@ -13,10 +13,14 @@ function userSession( state = initialState, action ) {
 
   switch( action.type ) {
     case UPDATE_AUTH_TOKEN:
-      return Object.assign( { }, state, {
+      const new_state = {
         is_logged_in: !!action.user_auth_token,
         user_auth_token: !!action.user_auth_token ? action.user_auth_token : ''
-      } );
+      };
+      if( !new_state.is_logged_in ) {
+        new_state.user = { };
+      }
+      return Object.assign( { }, state, new_state );
     case UPDATE_USER_PROFILE:
       return Object.assign( { }, state, {
         user: action.user

@@ -1,54 +1,49 @@
 import 'core-js/fn/object/assign';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Router, Route, browserHistory } from 'react-router';
+import {  BrowserRouter,
+          Route } from 'react-router-dom';
+
 import { Provider } from 'react-redux';
 import configureStore from './configureStore';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 injectTapEventPlugin();
 
-import { logUserIn } from 'actions/usersession';
+import { logUserIn, logUserOut } from 'actions/usersession';
 
 import ohmage from './utils/ohmage-wrapper';
 
 import App from './components/App';
-import Summary from './components/Summary';
-//import Class from './components/Class';
-//import CreateClass from './components/CreateClass';
 
-import AuditConsole from './components/AuditConsole/AuditConsole';
-import TeacherSetup from './components/TeacherSetup/TeacherSetup';
 
 const store = configureStore( undefined, ( ) => {
   console.log( 'Rehydrant called' );
   const userSession = store.getState( ).userSession;
-  const auth_token = ohmage._getToken( );
+  let auth_token = ohmage._getToken( );
   // if the auth_token cookie is not empty,
-  if( !!auth_token ) {
-    // update the state with this token from cookie
+  if( !auth_token ) {
+    // update ohmageUtil with token from the state
+    ohmage._setToken( userSession.user_auth_token );
+    auth_token = userSession.user_auth_token;
+  }
+  // Log user in with this token (to make sure this token is still valid)
+  if( auth_token !== '' ) {
     store.dispatch( logUserIn( auth_token ) );
   }
-  else {
-    // otherwise, update ohmageUtil with token from the state
-    ohmage._setToken( userSession.user_auth_token );
-  }
 } );
-// todo: add listener for ohmage wrapper/ohmage which is called in case
-// the ohmage token is invalidated by a request to the server
+
+ohmage._onUnknownTokenError( ( ) => {
+  // If the token was invalidated, for any reason...
+  // ... update the state & remove the token from the ohmage util
+  store.dispatch( logUserOut( ) );
+  ohmage._setToken( '' );
+} )
 
 // Render the main component into the dom
 ReactDOM.render((
   <Provider store={store}>
-    <Router history={browserHistory}>
-      <Route path="/" component={App}>
-      	<Route path="summary" title="Summary" component={Summary} />
-      	{/*<Route path="classes" component={Class} >
-          <Route path="/class/new" component={CreateClass} />
-        </Route>
-      	<Route path="users" />*/}
-      	<Route path="audit-console" title="Audit & API Console" component={AuditConsole} />
-        <Route path="teacher-setup" title="Teacher Setup Wizard" component={TeacherSetup} />
-      </Route>
-    </Router>
+    <BrowserRouter basename="/navbar/admin">
+      <Route path="/" component={App} />
+    </BrowserRouter>
   </Provider>
 ), document.getElementById('app'));

@@ -5,6 +5,7 @@ let webpack = require('webpack');
 
 let baseConfig = require('./base');
 let defaultSettings = require('./defaults');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 // Add needed plugins here
 let BowerWebpackPlugin = require('bower-webpack-plugin');
@@ -14,6 +15,11 @@ let config = Object.assign({}, baseConfig, {
   cache: false,
   devtool: 'sourcemap',
   plugins: [
+    new HtmlWebpackPlugin({
+      inject: false,
+      template: './src/index.html',
+      baseHref: !!process.env.BASE_HREF ? process.env.BASE_HREF : '/'
+    } ),
     new webpack.optimize.DedupePlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"'

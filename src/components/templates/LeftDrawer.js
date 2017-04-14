@@ -3,7 +3,7 @@ import Drawer from 'material-ui/Drawer';
 import {spacing, typography} from 'material-ui/styles';
 import {white, blue600} from 'material-ui/styles/colors';
 import MenuItem from 'material-ui/MenuItem';
-import {Link} from 'react-router';
+import {Link} from 'react-router-dom';
 
 const LeftDrawer = (props) => {
   let { navDrawerOpen } = props;
@@ -43,7 +43,6 @@ const LeftDrawer = (props) => {
       }
     }
   };
-
   return (
     <Drawer
       docked={true}
@@ -58,7 +57,7 @@ const LeftDrawer = (props) => {
               style={styles.menuItem}
               primaryText={menu.text}
               leftIcon={menu.icon}
-              containerElement={<Link to={menu.link}/>}
+              containerElement={<Link to={menu.path}/>}
             />
           )}
         </div>

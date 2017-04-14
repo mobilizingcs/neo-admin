@@ -15,17 +15,22 @@ module.exports = {
   debug: true,
   devtool: 'eval',
   output: {
-    path: path.join(__dirname, '/../dist/assets'),
-    filename: 'app.js',
-    publicPath: defaultSettings.publicPath
+    path: path.join(__dirname, '/../dist/'),
+    filename: 'assets/app.js',
+    publicPath: '/'
   },
   devServer: {
     contentBase: './src/',
     historyApiFallback: true,
+    publicPath: '/',
     hot: true,
     port: defaultSettings.port,
-    publicPath: defaultSettings.publicPath,
-    noInfo: false
+    proxy: [
+      {
+        context: [ '/app/' ],
+        target: 'http://127.0.0.1:8080'
+      }
+    ]
   },
   resolve: {
     extensions: ['', '.js', '.jsx'],

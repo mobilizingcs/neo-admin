@@ -13,12 +13,13 @@ class Ohmage {
     this.client = client || 'ohmage.js';
     this.auth_token = auth_token || null;
     this.keycloak_token = keycloak_token || null;
+    this.listener_onUnknownTokenError = ( ) => { };
     if( !this.server_url ) {
       throw new Error('Invalid constructor parameters.');
     }
   }
 
-  __call( endpoint, data = { } ) {
+  __call( endpoint, data = { }, must_pass_token = true ) {
 
     let headers = {
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
@@ -30,7 +31,7 @@ class Ohmage {
     else if( !!this.auth_token ) {
       data['auth_token'] = this.auth_token;
     }
-    else {
+    else if( must_pass_token ) {
       throw new Error( 'auth_token not set' );
     }
 
@@ -57,6 +58,11 @@ class Ohmage {
                   return !!body.data ? body.data : body;
                 }
                 else {
+                  if( body.errors.length > 0 ) {
+                    if( body.errors[ 0 ].code === '0200' ) {
+                      this.listener_onUnknownTokenError( body.errors[ 0 ] );
+                    }
+                  }
                   throw new AppError( 'ohmage', 'API response failed.', { body } );
                 }
               } );
@@ -78,12 +84,16 @@ class Ohmage {
     return this.auth_token;
   }
 
+  _onUnknownTokenError( fn ) {
+    this.listener_onUnknownTokenError = fn;
+  }
+
   whoAmI( ) {
     return this.__call( '/user/whoami' );
   }
 
   readConfig( ) {
-    return this.__call( '/config/read' );
+    return this.__call( '/config/read', undefined, false );
   }
 
   getLogs( parameters ) {
