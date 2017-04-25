@@ -1,5 +1,5 @@
 {
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Admin frontend for ohmage v2",
   "main": "",
   "scripts": {
@@ -14,7 +14,7 @@
     "release:patch": "npm version patch && npm publish && git push --follow-tags",
     "serve": "node server.js --env=dev",
     "serve:dist": "node server.js --env=dist",
-    "dev_navbar":"DEV_MODE=navbar node server.js --env=dev",
+    "dev_navbar": "DEV_MODE=navbar node server.js --env=dev",
     "start": "node server.js --env=dev"
   },
   "repository": "",
@@ -59,6 +59,7 @@
     "material-design-icons": "^3.0.1",
     "material-ui": "^0.17.1",
     "normalize.css": "^4.0.0",
+    "ohmage-es6": "^1.0.1",
     "papaparse": "^4.2.0",
     "react": "^15.0.0",
     "react-ace": "^4.2.0",

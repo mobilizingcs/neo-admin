@@ -1,4 +1,4 @@
-import Ohmage from './ohmage';
+import Ohmage from 'ohmage-es6';
 import config from 'config';
 
 let ohmage;
