@@ -1,7 +1,31 @@
 /* Base Application Styles */
+html {
+  font-family: 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+body, h1, h2, h3, h4, h5, h6 {
+  font-size: 15px;
+  margin: 0;
+  line-height: 24px;
+}
+
 body {
-  color: #fff;
-  background: #222;
+  margin: 0;
+  background-color: #efefef;
+}
+
+body, html, #app, #app > div{
+  height: 100%;
+}
+
+a {
+  color: #ff4081;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 .index img {
@@ -9,13 +33,4 @@ body {
   border-radius: 4px;
   background: #fff;
   display: block;
-}
-
-.index .notice {
-  margin: 20px auto;
-  padding: 15px 0;
-  text-align: center;
-  border: 1px solid #000;
-  border-width: 1px 0;
-  background: #666;
 }
