@@ -32,6 +32,9 @@ function localState( state = initialState.local_state, action ) {
 }
 
 function auditConsole( state = initialState, action ) {
+  if( typeof state === 'undefined' ) {
+    return initialState;
+  }
   switch( action.type ) {
     case REQUEST_LOGS:
       return Object.assign( { }, state, {

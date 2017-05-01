@@ -89,7 +89,7 @@ class App extends React.Component {
             <LeftDrawer navDrawerOpen={navDrawerOpen} menus={this.getMenuItems( this.props.location )} />
             <Notifications />
             <div style={styles.container}>
-              <AppProgressBar />
+              <AppProgressBar progress_type='linear' />
               <Paper style={{padding: 30, marginLeft: 1}}>
                 <Switch>
                   <Redirect exact from='/' to='/summary' />

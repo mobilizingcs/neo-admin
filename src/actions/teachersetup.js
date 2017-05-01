@@ -2,7 +2,7 @@ import ohmage from '../utils/ohmage-wrapper';
 import AppError from '../utils/AppError';
 import Papa from 'papaparse';
 import { showProgressBar, hideProgressBar } from './progressbar';
-import { flashNotification } from '../actions/notification';
+import { flashNotification } from './notification';
 
 export const RESET_STATE = 'RESET_STATE';
 export const PARSE_CSV = 'PARSE_CSV';

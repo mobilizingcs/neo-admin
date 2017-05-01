@@ -9,6 +9,7 @@ import {  TextField,
 import {  Grid,
           Row,
           Col } from 'react-flexbox-grid';
+import AppProgressBar from '../utils/AppProgressBar';
 
 import { fetchLogs } from '../../actions/auditconsole';
 
@@ -62,26 +63,28 @@ class FetchAuditLogs extends React.Component {
   }
 
   render( ) {
+    const isDisabled = this.props.is_fetching;
+
     return (
       <Grid fluid>
         <form onSubmit={this.handleSubmit}>
           <Row around="xs">
             <Col>
-              <TextField onChange={this.handleTextChange} name="uri" floatingLabelText="URI" />
+              <TextField disabled={isDisabled} onChange={this.handleTextChange} name="uri" floatingLabelText="URI" />
             </Col>
             <Col>
-              <TextField onChange={this.handleTextChange} name="client_value" floatingLabelText="Client" />
+              <TextField disabled={isDisabled} onChange={this.handleTextChange} name="client_value" floatingLabelText="Client" />
             </Col>
           </Row>
           <Row around="xs">
             <Col>
-              <TextField onChange={this.handleTextChange} name="device_id" floatingLabelText="Device ID" />
+              <TextField disabled={isDisabled} onChange={this.handleTextChange} name="device_id" floatingLabelText="Device ID" />
             </Col>
             <Col>
-              <SelectField
-                floatingLabelText="Request Result"
-                value={this.state.form.request_result}
-                onChange={this.handleSelectChange} >
+              <SelectField  disabled={isDisabled}
+                            floatingLabelText="Request Result"
+                            value={this.state.form.request_result}
+                            onChange={this.handleSelectChange} >
                 <MenuItem value={null} primaryText="" />
                 <MenuItem value={'success'} primaryText="Success" />
                 <MenuItem value={'failure'} primaryText="Failure" />
@@ -90,15 +93,18 @@ class FetchAuditLogs extends React.Component {
           </Row>
           <Row around="xs">
             <Col>
-              <TextField onChange={this.handleTextChange} name="from_date" floatingLabelText="From (Date)" />
+              <TextField disabled={isDisabled} onChange={this.handleTextChange} name="from_date" floatingLabelText="From (Date)" />
             </Col>
             <Col>
-              <TextField onChange={this.handleTextChange} name="to_date" floatingLabelText="To (Date)" />
+              <TextField disabled={isDisabled} onChange={this.handleTextChange} name="to_date" floatingLabelText="To (Date)" />
             </Col>
           </Row>
           <Row end="xs">
-            <Col>
-              <RaisedButton type='submit' primary={true} label='Fetch' />
+            <Col xs={2}>
+              <AppProgressBar progress_type='circular'/>
+            </Col>
+            <Col xs={2}>
+              <RaisedButton disabled={isDisabled} type='submit' primary={true} label='Fetch' />
             </Col>
           </Row>
         </form>
@@ -109,9 +115,9 @@ class FetchAuditLogs extends React.Component {
 }
 
 function mapStateToProps(state) {
-  const { auditconsole } = state;
+  const { auditConsole } = state;
   return {
-    auditconsole
+    is_fetching: auditConsole.is_fetching
   }
 }
 

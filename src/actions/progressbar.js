@@ -1,12 +1,12 @@
 export const SHOW_PROGRESS_BAR = 'SHOW_PROGRESS_BAR';
 export const HIDE_PROGRESS_BAR = 'HIDE_PROGRESS_BAR';
 
-export function showProgressBar( indeterminate, progress, buffer ) {
+export function showProgressBar( indeterminate = true, progress_type = 'linear', value ) {
   return {
     type: SHOW_PROGRESS_BAR,
     indeterminate,
-    progress,
-    buffer
+    progress_type,
+    value
   };
 }
 

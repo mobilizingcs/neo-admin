@@ -1,6 +1,9 @@
 import ohmage from '../utils/ohmage-wrapper';
 import db from '../utils/db';
 
+import { showProgressBar, hideProgressBar } from './progressbar';
+import { flashNotification } from './notification';
+
 export const REQUEST_LOGS = 'REQUEST_LOGS';
 export const RECEIVE_LOGS = 'RECEIVE_LOGS';
 export const REQUEST_CLEAR_LOCAL_LOGS = 'REQUEST_CLEAR_LOCAL_LOGS';
@@ -62,15 +65,20 @@ export function fetchLocalLogsState( ) {
 
 export function fetchLogs( parameters ) {
   return dispatch => {
+    dispatch( showProgressBar( true, 'circular' ) );
     dispatch( requestLogs( parameters ) );
     return ohmage.getLogs( parameters )
       .then( logs => {
         for( let i = 0; i < logs.audits.length; i++ ) {
           db.audit_logs.add( logs.audits[ i ] );
         }
+        return logs.audits.length;
       } )
-      .then( ( ) => {
-        dispatch( requestLogs( parameters ) );
+      .then( count => {
+        dispatch( receiveLogs( parameters ) );
+        dispatch( flashNotification( count + ' audit logs fetched successfully.' ) );
+        dispatch( fetchLocalLogsState( ) );
+        dispatch( hideProgressBar( ) );
       } );
   };
 }
@@ -82,6 +90,7 @@ export function clearLocalLogs( ) {
       .then( ( ) => {
         dispatch( receiveClearLocalLogs( ) );
         dispatch( fetchLocalLogsState( ) );
+        dispatch( flashNotification( 'Local audit logs cleared successfully.' ) );
       } )
   };
 }
