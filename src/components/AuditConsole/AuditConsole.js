@@ -13,6 +13,9 @@ import 'brace/theme/textmate';
 import AuditConsoleToolbar from './AuditConsoleToolbar';
 import OutputConsole from './OutputConsole';
 import { fetchLocalLogsState, clearLocalLogs } from '../../actions/auditconsole';
+import { flashNotification } from '../../actions/notification';
+
+import FileSaver from 'file-saver';
 
 class AuditConsole extends React.Component {
 
@@ -53,11 +56,31 @@ class AuditConsole extends React.Component {
     } );
   };
 
+  obtainCode = ( for_execution = true ) => {
+    if ( this.state.code.trim( ) === '' ) {
+      return '';
+    }
+    const code = [ ];
+    for_execution ? code.push( '(function(){' ) : null;
+    code.push( this.state.code );
+    for_execution ? code.push( '})()' ) : null;
+    let blob = new Blob( code, {type: 'application/javascript'} );
+    return blob;
+  };
+
+  saveCodeAsAFile = ( ) => {
+    const code_blob = this.obtainCode( false );
+    if( code_blob === '' ) {
+      this.props.dispatch( flashNotification( 'There is no code to save.' )  );
+      return false;
+    }
+    FileSaver.saveAs( code_blob, 'audit.js' );
+  }
+
   executeCode = ( ) => {
-    var blobURL = URL.createObjectURL(
-      new Blob([ '(function(){', this.state.code, '})()' ], {type: 'application/javascript'} )
-    );
-    this.worker = new Worker( blobURL );
+    const code_blob = window.URL.createObjectURL( this.obtainCode( ) );
+
+    this.worker = new Worker( code_blob  );
 
     this.worker.onerror = error => {
       this.logToOutputConsole( error.message, 'error', error.lineno, error.colno );
@@ -69,7 +92,7 @@ class AuditConsole extends React.Component {
       }
     };
 
-    URL.revokeObjectURL( blobURL );
+    window.URL.revokeObjectURL( code_blob );
   };
 
   render( ) {
@@ -81,6 +104,7 @@ class AuditConsole extends React.Component {
             <Col xs>
               <AuditConsoleToolbar  onClickExecute={this.executeCode}
                                     onClickClearLogs={this.clearLocalLogs}
+                                    onClickSaveFile={this.saveCodeAsAFile}
                                     count={local_state.state.count} />
             </Col>
           </Row>

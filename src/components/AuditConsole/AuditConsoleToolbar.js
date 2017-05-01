@@ -98,8 +98,7 @@ class AuditConsoleToolbar extends React.Component {
                           <NavigationExpandMoreIcon />
                         </IconButton>
                       } >
-              <MenuItem primaryText="Save File" />
-              <MenuItem primaryText="Clear" />
+              <MenuItem primaryText="Save code as file" onClick={this.props.onClickSaveFile} />
             </IconMenu>
           </ToolbarGroup>
         </Toolbar>
