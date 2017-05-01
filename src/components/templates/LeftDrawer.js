@@ -22,25 +22,6 @@ const LeftDrawer = (props) => {
     menuItem: {
       color: white,
       fontSize: 14
-    },
-    avatar: {
-      div: {
-        padding: '15px 0 20px 15px',
-        height: 45
-      },
-      icon: {
-        float: 'left',
-        display: 'block',
-        marginRight: 15,
-        boxShadow: '0px 0px 0px 8px rgba(0,0,0,0.2)'
-      },
-      span: {
-        paddingTop: 12,
-        display: 'block',
-        color: 'white',
-        fontWeight: 300,
-        textShadow: '1px 1px #444'
-      }
     }
   };
   return (

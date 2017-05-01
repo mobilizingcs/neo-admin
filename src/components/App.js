@@ -27,7 +27,6 @@ class App extends React.Component {
     this.state = {
       navDrawerOpen: true
     };
-    const paddingLeftDrawerOpen = 236;
     this.routes = [
       { path: '/summary', isExact: false, title: 'Summary', component: Summary },
       { path: '/audit-console', isExact: false, title: 'Audit & API Console', component: AuditConsole },
