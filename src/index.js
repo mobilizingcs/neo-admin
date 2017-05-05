@@ -12,8 +12,10 @@ injectTapEventPlugin();
 import { logUserIn, logUserOut } from 'actions/usersession';
 
 import ohmage from './utils/ohmage-wrapper';
-
 import App from './components/App';
+
+import './styles/App.css';
+import 'normalize.css';
 
 
 const store = configureStore( undefined, ( ) => {
@@ -37,12 +39,14 @@ ohmage._onUnknownTokenError( ( ) => {
   // ... update the state & remove the token from the ohmage util
   store.dispatch( logUserOut( ) );
   ohmage._setToken( '' );
-} )
+} );
+
+const BASENAME = WP_ENV_BASE_HREF || '/navbar/neo-admin/';
 
 // Render the main component into the dom
 ReactDOM.render((
   <Provider store={store}>
-    <BrowserRouter basename="/navbar/admin">
+    <BrowserRouter basename={BASENAME}>
       <Route path="/" component={App} />
     </BrowserRouter>
   </Provider>
