@@ -21,6 +21,7 @@ import Summary from './Summary';
 import AuditConsole from './AuditConsole/AuditConsole';
 import TeacherSetup from './TeacherSetup/TeacherSetup';
 import Classes from './Class/Classes';
+import ClassComponent from './Class/ClassComponent';
 
 class App extends React.Component {
   constructor( props ) {
@@ -32,7 +33,8 @@ class App extends React.Component {
       { path: '/summary', isExact: false, title: 'Summary', component: Summary },
       { path: '/audit-console', isExact: false, title: 'Audit & API Console', component: AuditConsole },
       { path: '/teacher-setup', isExact: false, title: 'Teacher Setup Wizard', component: TeacherSetup },
-      { path: '/classes', isExact: false, title: 'Classes', component: Classes }
+      { path: '/classes', isExact: false, title: 'Classes', component: Classes },
+      { path: '/class/:urn', isExact: false, title: 'Class Details', component: ClassComponent }
     ];
   }
 

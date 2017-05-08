@@ -25,7 +25,6 @@ export function fetchClasses( ) {
     dispatch( showProgressBar( true ) );
     dispatch( requestClasses( ) );
     // use updated ohmage-es6
-    // todo: handle errors
     return ohmage.__call( '/class/search', { } )
             .then( response => {
               // move this logic to ohmage-es6
