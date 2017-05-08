@@ -20,6 +20,7 @@ import Notifications from './utils/Notifications';
 import Summary from './Summary';
 import AuditConsole from './AuditConsole/AuditConsole';
 import TeacherSetup from './TeacherSetup/TeacherSetup';
+import Classes from './Class/Classes';
 
 class App extends React.Component {
   constructor( props ) {
@@ -30,7 +31,8 @@ class App extends React.Component {
     this.routes = [
       { path: '/summary', isExact: false, title: 'Summary', component: Summary },
       { path: '/audit-console', isExact: false, title: 'Audit & API Console', component: AuditConsole },
-      { path: '/teacher-setup', isExact: false, title: 'Teacher Setup Wizard', component: TeacherSetup }
+      { path: '/teacher-setup', isExact: false, title: 'Teacher Setup Wizard', component: TeacherSetup },
+      { path: '/classes', isExact: false, title: 'Classes', component: Classes }
     ];
   }
 
@@ -59,7 +61,8 @@ class App extends React.Component {
     let menu_items = [
       { active: false, text: 'Summary', icon: <AvWeb />, path: '/summary' },
       { active: false, text: 'Teacher Setup', icon: <ActionSupervisorAccount />, path: '/teacher-setup' },
-      { active: false, text: 'Audit & API Console', icon: <ActionSearch />, path: '/audit-console'}
+      { active: false, text: 'Audit & API Console', icon: <ActionSearch />, path: '/audit-console'},
+      { active: false, text: 'Classes', icon: null, path: '/classes' }
     ];
     for( let i = 0; i < menu_items.length; i++ ) {
       menu_items[ i ].active = matchPath( location.pathname, { path: menu_items[ i ].path } );

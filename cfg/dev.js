@@ -55,6 +55,9 @@ let config = Object.assign({}, baseConfig, {
       template: './src/index.html',
       baseHref: !!process.env.BASE_HREF ? process.env.BASE_HREF : '/'
     } ),
+    new webpack.DefinePlugin({
+      'WP_ENV_BASE_HREF': JSON.stringify( !!process.env.BASE_HREF ? process.env.BASE_HREF : '/' )
+    }),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin(),
     new BowerWebpackPlugin({

@@ -5,6 +5,7 @@ import progressBar from './progressBar';
 import notifications from './notifications';
 import auditConsole from './auditConsole';
 import userSession from './userSession';
+import classes from './classes';
 
 const rootReducer = combineReducers({
 	summary,
@@ -12,7 +13,8 @@ const rootReducer = combineReducers({
   progressBar,
   notifications,
   auditConsole,
-  userSession
+  userSession,
+  classes
 });
 
 export default rootReducer;
