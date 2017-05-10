@@ -147,15 +147,8 @@ class AddClassMembers extends React.Component {
   render( ) {
     return (
       <div>
-        <Row>
-          <Col xs>
-            <h1>Class Members</h1>
-          </Col>
-        </Row>
-        <Row>
-          <h2>Add New Members:</h2>
-        </Row>
-        <Row>
+        <h2>Add New Members:</h2>
+        <Row style={{marginLeft:'0px'}}>
           <Col xs>
             <Row>
               <AutoComplete style={{width:'100%'}}
@@ -182,7 +175,7 @@ class AddClassMembers extends React.Component {
               this.state.users_to_add_as_members.length > 0
               ? (
                 <Row>
-                  <Col>
+                  <Col xs>
                     <RaisedButton type='button'
                                   onTouchTap={this.openRolePopover}
                                   label='Add Members to Class'
