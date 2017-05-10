@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import {  Step,
           Stepper,
           StepLabel,
-          RaisedButton } from 'material-ui';
+          RaisedButton,
+          Paper } from 'material-ui';
 
 import { parseCsvFile,
          createAccountsAndSetPermissions,
@@ -129,22 +130,24 @@ class TeacherSetup extends React.Component {
     const activeStep = this.props.step;
 
     return (
-      <div style={{width: '100%', margin: 'auto'}}>
-        <Stepper activeStep={activeStep}>
-          <Step>
-            <StepLabel>Upload a CSV file</StepLabel>
-          </Step>
-          <Step>
-            <StepLabel>Preview New Accounts</StepLabel>
-          </Step>
-          <Step>
-            <StepLabel>Export Created Accounts</StepLabel>
-          </Step>
-        </Stepper>
-        <div style={contentStyle}>
-          { this.renderStep( activeStep ) }
+      <Paper style={{padding: 30, marginLeft: 1}}>
+        <div style={{width: '100%', margin: 'auto'}}>
+          <Stepper activeStep={activeStep}>
+            <Step>
+              <StepLabel>Upload a CSV file</StepLabel>
+            </Step>
+            <Step>
+              <StepLabel>Preview New Accounts</StepLabel>
+            </Step>
+            <Step>
+              <StepLabel>Export Created Accounts</StepLabel>
+            </Step>
+          </Stepper>
+          <div style={contentStyle}>
+            { this.renderStep( activeStep ) }
+          </div>
         </div>
-      </div>
+      </Paper>
     );
   }
 }

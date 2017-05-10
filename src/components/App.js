@@ -4,7 +4,7 @@ import {  Route,
           Redirect,
           matchPath } from 'react-router-dom';
 
-import { Paper, MuiThemeProvider } from 'material-ui';
+import { MuiThemeProvider } from 'material-ui';
 import {  AvWeb,
           ActionSearch,
           ActionSupervisorAccount } from 'material-ui/svg-icons';
@@ -95,7 +95,6 @@ class App extends React.Component {
             <Notifications />
             <div style={styles.container}>
               <AppProgressBar progress_type='linear' />
-              <Paper style={{padding: 30, marginLeft: 1}}>
                 <Switch>
                   <Redirect exact from='/' to='/summary' />
                   {
@@ -109,7 +108,6 @@ class App extends React.Component {
                   }
                 </Switch>
                 <div style={{clear: 'both'}}/>
-              </Paper>
             </div>
           </div>
         </MuiThemeProvider>

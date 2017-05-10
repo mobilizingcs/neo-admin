@@ -7,7 +7,8 @@ import {  RaisedButton,
           TableRow,
           TableHeaderColumn,
           TableBody,
-          TableRowColumn } from 'material-ui';
+          TableRowColumn,
+          Paper } from 'material-ui';
 
 import { fetchSummary } from '../actions/summary';
 
@@ -30,6 +31,7 @@ class Summary extends React.Component {
 
   render( ) {
     return (
+     <Paper style={{padding: 30, marginLeft: 1}}>
       <div style={{margin:'50px'}}>
         <h3>Ohmage Server Information</h3>
         <RaisedButton label='Refresh' primary={true} type='button'
@@ -53,6 +55,7 @@ class Summary extends React.Component {
           </TableBody>
         </Table>
       </div>
+    </Paper>
     );
   }
 

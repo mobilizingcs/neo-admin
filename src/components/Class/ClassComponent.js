@@ -1,16 +1,18 @@
 import React from 'react';
 
-import {  IconButton,
-          RaisedButton,
+import {  RaisedButton,
           Divider,
-          TextField } from 'material-ui';
-import { AvReplay } from 'material-ui/svg-icons';
+          TextField,
+          Paper } from 'material-ui';
 
 import {  Grid,
           Row,
           Col } from 'react-flexbox-grid';
 
 import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
+
+import ClassMembers from './ClassMembers';
+
 import ohmage from '../../utils/ohmage-wrapper';
 
 // this component is named ClassComponent to prevent name-clashing with the JS
@@ -75,44 +77,53 @@ class ClassComponent extends React.Component {
   render( ) {
     return (
       <div>
-        <Grid fluid>
-          <ValidatorForm ref="form" onSubmit={this.handleUpdateForm}>
+        <Paper style={{padding: 30, marginLeft: 1}}>
+          <Grid fluid>
             <Row>
               <Col xs>
-                <TextField style={{width:'100%'}}
-                    disabled={true}
-                    value={this.state.urn}
-                    floatingLabelText="Class URN"
-                  />
+                <h1>Class Meta Data</h1>
               </Col>
             </Row>
-            <Row>
-              <Col xs>
-                <TextValidator style={{width:'100%'}}  floatingLabelText="Class Name"
-                                onChange={this.handleChange}
-                                name="name"
-                                value={this.state.name}
-                                validators={['required']}
-                                errorMessages={['this field is required']} />
-              </Col>
-            </Row>
-            <Row>
-              <Col xs>
-                <TextValidator style={{width:'100%'}}  floatingLabelText="Class Description"
-                                onChange={this.handleChange}
-                                name="description"
-                                value={this.state.description}
-                                multiLine={true}
-                                rows={3} />
-              </Col>
-            </Row>
-            <Row>
-              <Col xs>
-                <RaisedButton label="Update" primary={true} type="submit" />
-              </Col>
-            </Row>
-          </ValidatorForm>
-        </Grid>
+            <ValidatorForm ref="form" onSubmit={this.handleUpdateForm}>
+              <Row>
+                <Col xs>
+                  <TextField style={{width:'100%'}}
+                      disabled={true}
+                      value={this.state.urn}
+                      floatingLabelText="Class URN"
+                    />
+                </Col>
+              </Row>
+              <Row>
+                <Col xs>
+                  <TextValidator style={{width:'100%'}}  floatingLabelText="Class Name"
+                                  onChange={this.handleChange}
+                                  name="name"
+                                  value={this.state.name}
+                                  validators={['required']}
+                                  errorMessages={['this field is required']} />
+                </Col>
+              </Row>
+              <Row>
+                <Col xs>
+                  <TextValidator style={{width:'100%'}}  floatingLabelText="Class Description"
+                                  onChange={this.handleChange}
+                                  name="description"
+                                  value={this.state.description}
+                                  multiLine={true}
+                                  rows={3} />
+                </Col>
+              </Row>
+              <Row>
+                <Col xs>
+                  <RaisedButton label="Update" primary={true} type="submit" />
+                </Col>
+              </Row>
+            </ValidatorForm>
+          </Grid>
+        </Paper>
+        <Divider />
+        <ClassMembers class_urn={this.state.urn} class_members={this.state.class_members} />
       </div>
       );
   }

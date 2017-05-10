@@ -40,6 +40,7 @@ export function fetchClasses( ) {
               dispatch( hideProgressBar( ) );
             } )
             .catch( error => {
+              console.log( error );
               dispatch( flashNotification( 'An error occurred while trying to fetch classes.' ) );
               dispatch( hideProgressBar( ) );
             } )

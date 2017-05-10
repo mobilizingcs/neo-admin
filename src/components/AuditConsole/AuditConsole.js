@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
+import { Paper } from 'material-ui';
 import {  Grid,
           Row,
           Col } from 'react-flexbox-grid';
@@ -99,34 +100,36 @@ class AuditConsole extends React.Component {
     const { local_state } = this.props;
     return (
       <div>
-        <Grid fluid>
-          <Row>
-            <Col xs>
-              <AuditConsoleToolbar  onClickExecute={this.executeCode}
-                                    onClickClearLogs={this.clearLocalLogs}
-                                    onClickSaveFile={this.saveCodeAsAFile}
-                                    count={local_state.state.count} />
-            </Col>
-          </Row>
-          <Row>
-            <Col xs>
-              <AceEditor  fontSize={20}
-                          tabSize={2}
-                          value={this.state.code}
-                          onChange={this.updateCode}
-                          width="100%"
-                          height="300px"
-                          mode="javascript"
-                          theme="textmate"
-                          name="code_editor" />
-            </Col>
-          </Row>
-          <Row>
-            <Col xs>
-              <OutputConsole onClearConsole={this.clearOutputConsole} output={this.state.output} />
-            </Col>
-          </Row>
-        </Grid>
+        <Paper style={{padding: 30, marginLeft: 1}}>
+          <Grid fluid>
+            <Row>
+              <Col xs>
+                <AuditConsoleToolbar  onClickExecute={this.executeCode}
+                                      onClickClearLogs={this.clearLocalLogs}
+                                      onClickSaveFile={this.saveCodeAsAFile}
+                                      count={local_state.state.count} />
+              </Col>
+            </Row>
+            <Row>
+              <Col xs>
+                <AceEditor  fontSize={20}
+                            tabSize={2}
+                            value={this.state.code}
+                            onChange={this.updateCode}
+                            width="100%"
+                            height="300px"
+                            mode="javascript"
+                            theme="textmate"
+                            name="code_editor" />
+              </Col>
+            </Row>
+            <Row>
+              <Col xs>
+                <OutputConsole onClearConsole={this.clearOutputConsole} output={this.state.output} />
+              </Col>
+            </Row>
+          </Grid>
+        </Paper>
       </div>
     );
   }
