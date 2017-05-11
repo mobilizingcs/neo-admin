@@ -33,7 +33,7 @@ class ClassComponent extends React.Component {
     }
   }
 
-  populateState = ( class_urn ) => {
+  populateState = ( class_urn = this.class_urn_param ) => {
     // todo: move to ohmage-es6
     ohmage.__call( '/class/read', { class_urn_list: [ class_urn ], with_user_list: true } )
           .then( response => {
@@ -67,7 +67,7 @@ class ClassComponent extends React.Component {
   };
 
   componentDidMount( ) {
-    this.populateState( this.class_urn_param );
+    this.populateState( );
   }
 
   handleUpdateForm = ( ) => {
@@ -123,7 +123,9 @@ class ClassComponent extends React.Component {
           </Grid>
         </Paper>
         <Divider />
-        <ClassMembers class_urn={this.state.urn} class_members={this.state.class_members} />
+        <ClassMembers class_urn={this.state.urn}
+                      class_members={this.state.class_members}
+                      onRefreshSignal={this.populateState} />
       </div>
       );
   }

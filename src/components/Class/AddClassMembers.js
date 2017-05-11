@@ -128,9 +128,15 @@ class AddClassMembers extends React.Component {
         if( success ) {
           this.props.dispatch( flashNotification( 'Member(s) added successfully.' ) );
           this.setState( {
-            users_to_add_as_members: [ ]
+            users_to_add_as_members: [ ],
+            role_popover_open: false
           } );
+        } else {
+          throw new Error( 'API call failed.' );
         }
+      } )
+      .catch( ( ) => {
+        // todo: handle
       } )
   };
 
@@ -151,52 +157,49 @@ class AddClassMembers extends React.Component {
         <Row style={{marginLeft:'0px'}}>
           <Col xs>
             <Row>
-              <AutoComplete style={{width:'100%'}}
-                            textFieldStyle={{width:'100%'}}
-                            hintText="Type a user's name"
-                            filter={this.filterDataSource}
-                            dataSource={this.state.all_users}
-                            onUpdateInput={this.updateSearchText}
-                            searchText={this.state.search_text}
-                            onNewRequest={this.addUserToNewMembers}
-                            dataSourceConfig={{text: 'label',value:'username'}}/>
+              <Col xs={10}>
+                <AutoComplete style={{width:'100%'}}
+                              textFieldStyle={{width:'100%'}}
+                              hintText="Type a user's name"
+                              filter={this.filterDataSource}
+                              dataSource={this.state.all_users}
+                              onUpdateInput={this.updateSearchText}
+                              searchText={this.state.search_text}
+                              onNewRequest={this.addUserToNewMembers}
+                              dataSourceConfig={{text: 'label',value:'username'}}/>
+              </Col>
+              <Col xs={2}>
+                <RaisedButton type='button'
+                              onTouchTap={this.openRolePopover}
+                              label='Add Members to Class'
+                              disabled={this.state.users_to_add_as_members.length === 0}
+                              primary={true} />
+                <Popover  open={this.state.role_popover_open}
+                          anchorEl={this.state.role_popover_anchor_el}
+                          anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
+                          targetOrigin={{horizontal: 'left', vertical: 'top'}}
+                          onRequestClose={this.closeRolePopover} >
+                  <Menu>
+                    <MenuItem onTouchTap={this.addNewMembersWithRole( 'restricted' )}
+                              primaryText="With restricted role" />
+                    <MenuItem onTouchTap={this.addNewMembersWithRole( 'privileged' )}
+                              primaryText="With privileged role" />
+                  </Menu>
+                </Popover>
+              </Col>
             </Row>
             <Row>
               {
                 this.state.users_to_add_as_members.map( ( username, index ) => {
-                  return (<Chip  key={index}
-                         onRequestDelete={() => this.handleRequestDelete(index)} >
-                    {username}
-                  </Chip>);
+                  return  (
+                    <Chip key={index}
+                          onRequestDelete={() => this.handleRequestDelete(index)} >
+                      {username}
+                    </Chip>
+                    );
                 } )
               }
             </Row>
-            {
-              this.state.users_to_add_as_members.length > 0
-              ? (
-                <Row>
-                  <Col xs>
-                    <RaisedButton type='button'
-                                  onTouchTap={this.openRolePopover}
-                                  label='Add Members to Class'
-                                  primary={true} />
-                    <Popover  open={this.state.role_popover_open}
-                              anchorEl={this.state.role_popover_anchor_el}
-                              anchorOrigin={{horizontal: 'left', vertical: 'bottom'}}
-                              targetOrigin={{horizontal: 'left', vertical: 'top'}}
-                              onRequestClose={this.closeRolePopover} >
-                      <Menu>
-                        <MenuItem onTouchTap={this.addNewMembersWithRole( 'restricted' )}
-                                  primaryText="With restricted role" />
-                        <MenuItem onTouchTap={this.addNewMembersWithRole( 'privileged' )}
-                                  primaryText="With privileged role" />
-                      </Menu>
-                    </Popover>
-                  </Col>
-                </Row>
-                )
-              : null
-            }
           </Col>
         </Row>
       </div>

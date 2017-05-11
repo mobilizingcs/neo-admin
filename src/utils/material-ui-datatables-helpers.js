@@ -1,11 +1,10 @@
 class TableDataHandler {
   constructor( data = [ ], columns = [ ], rows_per_page = 10, search_function ) {
-    // todo: refactor this.data as this.data_view?
-    // this.data is the "current view" for the table
+    // this.data_view is the "current view" for the table
     // this.data_copy is the actual data out of which the "current view" is obtained
-    // this.data contents should never be modified... instead, return new arrays
-    // for pagination/filtering/sorting based on this.data
-    this.data;
+    // this.data_view contents should never be modified... instead, return new arrays
+    // for pagination/filtering/sorting based on this.data_view / this.data_copy
+    this.data_view;
     this.data_copy;
     this.setDataCopy( data );
     this.columns = columns;
@@ -15,8 +14,8 @@ class TableDataHandler {
 
   setData( data ) {
     if( !data ) throw new Error( 'Unable to set data: ' + data );
-    this.data = data;
-    this.total_pages = this.data.length / this.rows_per_page;
+    this.data_view = data;
+    this.total_pages = this.data_view.length / this.rows_per_page;
     this.current_page = 1;
     this.search_query = '';
   }
@@ -29,7 +28,7 @@ class TableDataHandler {
   }
 
   get totalObjectCount( ) {
-    return this.data.length;
+    return this.data_view.length;
   }
 
   set currentPage( value ) {
@@ -43,14 +42,14 @@ class TableDataHandler {
   }
 
   get currentPageData( ) {
-    if( this.data.length === 0 ) return [ ];
+    if( this.data_view.length === 0 ) return [ ];
 
     const page_data_start_index = (this.currentPage - 1) * this.rows_per_page;
     let page_data_end_index = (this.currentPage) * this.rows_per_page;
-    if( page_data_end_index >= this.data.length ) {
-      page_data_end_index = this.data.length - 1;
+    if( page_data_end_index >= this.data_view.length ) {
+      page_data_end_index = this.data_view.length - 1;
     }
-    return this.data.slice( page_data_start_index, page_data_end_index );
+    return this.data_view.slice( page_data_start_index, page_data_end_index );
   }
 
   set searchQuery( value ) {
@@ -61,6 +60,16 @@ class TableDataHandler {
     } else {
       this.setData( this.data_copy );
     }
+  }
+
+  findObjects( rows ) {
+    const current_page_data = this.currentPageData;
+    return current_page_data.filter( ( object, index ) => rows.indexOf( index ) > -1 );
+  }
+
+  get objects( ) {
+    // return a new deep-copied array instead?
+    return this.data_copy;
   }
 
 }
