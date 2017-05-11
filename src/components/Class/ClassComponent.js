@@ -12,6 +12,7 @@ import {  Grid,
 import { ValidatorForm, TextValidator} from 'react-material-ui-form-validator';
 
 import ClassMembers from './ClassMembers';
+import AddClassMembers from './AddClassMembers';
 
 import ohmage from '../../utils/ohmage-wrapper';
 
@@ -123,9 +124,23 @@ class ClassComponent extends React.Component {
           </Grid>
         </Paper>
         <Divider />
-        <ClassMembers class_urn={this.state.urn}
-                      class_members={this.state.class_members}
-                      onRefreshSignal={this.populateState} />
+        <Paper style={{padding: 30, marginLeft: 1}}>
+          <Grid fluid>
+            <Row>
+              <Col xs>
+                <h1>Class Members</h1>
+              </Col>
+            </Row>
+            <Row>
+              <Col xs style={{marginLeft:'22px'}}>
+                <AddClassMembers class_urn={this.state.urn} />
+              </Col>
+            </Row>
+            <ClassMembers class_urn={this.state.urn}
+                          class_members={this.state.class_members}
+                          onRefreshSignal={this.populateState} />
+          </Grid>
+        </Paper>
       </div>
       );
   }
