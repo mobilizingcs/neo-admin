@@ -1,12 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 
-import {  Paper,
-          IconButton,
-          Dialog } from 'material-ui';
+import { IconButton } from 'material-ui';
 
-import {  Grid,
-          Row,
+import {  Row,
           Col } from 'react-flexbox-grid';
 import DataTables from 'material-ui-datatables';
 

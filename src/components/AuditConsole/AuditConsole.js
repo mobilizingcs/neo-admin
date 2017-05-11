@@ -46,9 +46,9 @@ class AuditConsole extends React.Component {
   };
 
   logToOutputConsole = ( text, type, lineno, colno ) => {
-    this.setState( {
-      output: this.state.output.concat( [ { text, lineno, colno, type } ] )
-    } );
+    this.setState( ( prevState ) => ( {
+      output: prevState.output.concat( [ { text, lineno, colno, type } ] )
+    } ) );
   };
 
   clearOutputConsole = ( ) => {

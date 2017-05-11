@@ -44,6 +44,8 @@ class Classes extends React.Component {
   handleRefreshClick = ( ) => {
     // re_render_table is used to re-render the child component to clear off
     // the filter & search values since
+
+    // todo: handle with prevState
     this.setState( {
       sort_function: null,
       search_query: '',

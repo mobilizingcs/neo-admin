@@ -2,8 +2,7 @@ import React from 'react';
 
 import { connect } from 'react-redux';
 
-import {  AutoComplete,
-          Popover,
+import {  Popover,
           Menu,
           MenuItem,
           RaisedButton,
@@ -13,6 +12,8 @@ import {  Row,
           Col } from 'react-flexbox-grid';
 
 import { flashNotification } from '../../actions/notification';
+
+import BetterAutoComplete from '../utils/BetterAutoComplete';
 
 import ohmage from '../../utils/ohmage-wrapper';
 
@@ -31,6 +32,7 @@ class AddClassMembers extends React.Component {
   }
 
   filterDataSource = ( search_query, text ) => {
+    console.log('called');
     search_query = search_query.trim( ).toLowerCase( );
     text = text.toLowerCase( );
     if( text.indexOf( search_query ) > -1 ) {
@@ -43,34 +45,29 @@ class AddClassMembers extends React.Component {
     if( index > -1
         && this.state.users_to_add_as_members.indexOf( element.username ) < 0 ) {
       this.setState( {
-        search_text: '',
         users_to_add_as_members: this.state.users_to_add_as_members.concat( [ this.state.all_users[ index ].username ] )
       } );
     } else {
       this.props.dispatch( flashNotification( 'Member already added.' ) );
-      this.setState( {
-        search_text: ''
-      } );
     }
-  };
-
-  updateSearchText = searchText => {
-    this.setState( {
-      search_text: searchText
-    } );
   };
 
   transformUserForAutocomplete = user => {
     if( !!user.personal ) {
       return {
-        label: (user.personal.first_name || '' )
-                + ' ' + (user.personal.last_name || '')
+        search_field: (
+                        ( user.personal.first_name || '' )
+                        + ' ' + ( user.personal.last_name || '' )
+                        + ' ' + ( user.username )
+                      ).toLowerCase( ),
+        label: ( user.personal.first_name || '' )
+                + ' ' + ( user.personal.last_name || '' )
                 + ' (' + user.username + ')',
         username: user.username
       };
     }
     else {
-      return { label: user.username, username: user.username };
+      return { search_field: user.username, label: user.username, username: user.username };
     }
   };
 
@@ -140,6 +137,13 @@ class AddClassMembers extends React.Component {
       } )
   };
 
+  deleteNewMember = ( index ) => {
+    // todo: fix? this doesn't work for some reason
+    this.setState( ( prevState ) => ( {
+      users_to_add_as_members: prevState.users_to_add_as_members.filter( ( _ , _index ) => index !== _index  )
+    } ) );
+  }
+
   addNewMembersWithRole = role => {
     return ( ) => {
       return this.addNewMembers( role );
@@ -157,18 +161,12 @@ class AddClassMembers extends React.Component {
         <Row style={{marginLeft:'0px'}}>
           <Col xs>
             <Row>
-              <Col xs={10}>
-                <AutoComplete style={{width:'100%'}}
-                              textFieldStyle={{width:'100%'}}
-                              hintText="Type a user's name"
-                              filter={this.filterDataSource}
-                              dataSource={this.state.all_users}
-                              onUpdateInput={this.updateSearchText}
-                              searchText={this.state.search_text}
-                              onNewRequest={this.addUserToNewMembers}
-                              dataSourceConfig={{text: 'label',value:'username'}}/>
+              <Col xs={9}>
+                <BetterAutoComplete hint_text="Type a user's name"
+                                    onNewRequest={this.addUserToNewMembers}
+                                    data_source={this.state.all_users} />
               </Col>
-              <Col xs={2}>
+              <Col xs={3}>
                 <RaisedButton type='button'
                               onTouchTap={this.openRolePopover}
                               label='Add Members to Class'
@@ -193,7 +191,7 @@ class AddClassMembers extends React.Component {
                 this.state.users_to_add_as_members.map( ( username, index ) => {
                   return  (
                     <Chip key={index}
-                          onRequestDelete={() => this.handleRequestDelete(index)} >
+                          onRequestDelete={( ) => this.deleteNewMember( index ) } >
                       {username}
                     </Chip>
                     );

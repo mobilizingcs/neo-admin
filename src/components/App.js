@@ -45,9 +45,9 @@ class App extends React.Component {
   }
 
   handleChangeRequestNavDrawer() {
-    this.setState({
-      navDrawerOpen: !this.state.navDrawerOpen
-    });
+    this.setState( ( prevState ) => ( {
+      navDrawerOpen: !prevState.navDrawerOpen
+    } ) );
   }
 
   getHeaderTitle = ( location ) => {

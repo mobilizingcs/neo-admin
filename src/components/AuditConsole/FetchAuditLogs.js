@@ -42,6 +42,7 @@ class FetchAuditLogs extends React.Component {
   }
 
   handleSelectChange( event, index, value ) {
+    // todo: handle with prevState
     this.setState({
       form: {
         ...this.state.form,
@@ -54,6 +55,7 @@ class FetchAuditLogs extends React.Component {
     const target = event.target;
     const value = target.type === 'checkbox' ? target.checked : target.value;
     const name = target.name;
+    // todo: handle with prevState
     this.setState({
       form: {
         ...this.state.form,
