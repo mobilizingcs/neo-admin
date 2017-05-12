@@ -1,13 +1,15 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 
-import { IconButton } from 'material-ui';
+import { IconButton, CircularProgress } from 'material-ui';
 
 import {  Row,
           Col } from 'react-flexbox-grid';
 import DataTables from 'material-ui-datatables';
 
 import ConfirmDialog from '../utils/ConfirmDialog';
+import AppProgressBar from '../utils/AppProgressBar';
 
 import { TableDataHandler } from '../../utils/material-ui-datatables-helpers';
 import { flashNotification } from '../../actions/notification';
@@ -15,6 +17,13 @@ import { flashNotification } from '../../actions/notification';
 import ohmage from '../../utils/ohmage-wrapper';
 
 class ClassMembers extends React.Component {
+
+  static propTypes = {
+    class_members: PropTypes.array.isRequired,
+    class_urn: PropTypes.string.isRequired,
+    onRefreshSignal: PropTypes.func
+  };
+
   constructor( props ) {
     super( props );
 
@@ -42,13 +51,17 @@ class ClassMembers extends React.Component {
                                         return false;
                                       } );
     this.state = {
-      confirm_dialog: false
+      confirm_dialog: false,
+      is_loading: false
     };
   }
 
   componentWillReceiveProps( props ) {
     this.data.setDataCopy( props.class_members );
     this.class_urn = props.class_urn;
+    this.setState( {
+      is_loading: false
+    } );
   }
 
   deleteMembers = ( ) => {
@@ -69,7 +82,7 @@ class ClassMembers extends React.Component {
         .then( success => {
           if( success ) {
             this.props.dispatch( flashNotification( 'Class members deleted successfully.' ) );
-            if( typeof this.props.onRefreshSignal === 'function' ) this.props.onRefreshSignal( );
+            this.reloadComponentData( );
           } else {
             throw new Error( 'API call failed: success != true' );
           }
@@ -81,7 +94,7 @@ class ClassMembers extends React.Component {
     }
   };
 
-  confirmDeleteAction = (  ) => {
+  confirmDeleteAction = ( ) => {
     if( this.members_selected.length > 0 || this.all_members_selected ) {
       this.confirm_dialog.handleOpen( );
     } else {
@@ -105,27 +118,52 @@ class ClassMembers extends React.Component {
   };
 
   tableSelectRows = ( rows = [ ] ) => {
-    if( rows.length === 1 ) {
-      if( typeof rows[ 0 ] === 'string' ) {
-        if( rows[ 0 ] === 'none' ) {
-          this.all_members_selected = false;
-          return;
-        } else if( rows[ 0 ] === 'all' ) {
-          this.all_members_selected = true;
-          return;
-        } else {
-          // Just one, actual row was selected... proceed normally
-        }
+    if( typeof rows === 'string' ) {
+      if( rows === 'none' ) {
+        this.all_members_selected = false;
+        return;
+      } else if( rows === 'all' ) {
+        this.all_members_selected = true;
+        return;
       }
-    } else if( rows.length === 0 ) {
-      return;
+    } else if( typeof rows === 'array' ) {
+      this.members_selected = rows;
     }
-    this.members_selected = rows;
+  };
+
+  reloadComponentData = ( ) => {
+    this.setState( {
+      is_loading: true
+    } );
+    if( typeof this.props.onRefreshSignal === 'function' ) this.props.onRefreshSignal( );
+  };
+
+  handleComponentClick = ( event ) => {
+    // todo: fix. this function is called during the bubbling phase... not sure why
+    if( this.state.is_loading ) {
+      event.preventDefault( );
+      event.stopPropagation( );
+    }
   };
 
   render( ) {
     return (
-        <Row>
+      <div>
+        {
+          this.state.is_loading
+          ?
+          (
+            <Row center='xs'>
+              <Col xs={1}>
+                <CircularProgress />
+              </Col>
+            </Row>
+          )
+          :
+          null
+        }
+        <Row  style={{opacity: this.state.is_loading ? 0.1 : 1 }}
+              onClickCapture={this.handleComponentClick} >
           <Col xs>
             <ConfirmDialog  ref={ instance => this.confirm_dialog = instance }
                             title='Confirmation'
@@ -159,6 +197,7 @@ class ClassMembers extends React.Component {
                         rowSizeLabel='' />
           </Col>
         </Row>
+      </div>
       );
   }
 }

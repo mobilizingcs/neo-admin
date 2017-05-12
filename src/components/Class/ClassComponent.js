@@ -26,7 +26,7 @@ class ClassComponent extends React.Component {
     this.class_urn_param = this.props.match.params.urn;
 
     this.state = {
-      urn: this.class_urn,
+      urn: this.class_urn_param,
       name: 'This is the class name',
       description: 'This is some sample description',
       associated_campaigns: [ ],
@@ -133,7 +133,8 @@ class ClassComponent extends React.Component {
             </Row>
             <Row>
               <Col xs style={{marginLeft:'22px'}}>
-                <AddClassMembers class_urn={this.state.urn} />
+                <AddClassMembers  onRefreshSignal={this.populateState}
+                                  class_urn={this.state.urn} />
               </Col>
             </Row>
             <ClassMembers class_urn={this.state.urn}

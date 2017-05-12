@@ -47,7 +47,7 @@ class TableDataHandler {
     const page_data_start_index = (this.currentPage - 1) * this.rows_per_page;
     let page_data_end_index = (this.currentPage) * this.rows_per_page;
     if( page_data_end_index >= this.data_view.length ) {
-      page_data_end_index = this.data_view.length - 1;
+      page_data_end_index = this.data_view.length;
     }
     return this.data_view.slice( page_data_start_index, page_data_end_index );
   }

@@ -29,7 +29,7 @@ class BetterAutoComplete extends React.Component {
     this.setState( {
       data
     } );
-  }, 1000 );
+  }, 300 );
 
   onUpdateInput = ( search_text ) => {
     this.setState( {
@@ -39,7 +39,6 @@ class BetterAutoComplete extends React.Component {
   };
 
   onNewRequest = ( ...args ) => {
-    console.log(args);
     this.onUpdateInput( '' );
     this.props.onNewRequest( ...args );
   }

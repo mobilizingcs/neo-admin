@@ -1,5 +1,5 @@
 import React from 'react';
-
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import {  Popover,
@@ -18,6 +18,11 @@ import BetterAutoComplete from '../utils/BetterAutoComplete';
 import ohmage from '../../utils/ohmage-wrapper';
 
 class AddClassMembers extends React.Component {
+
+  static propTypes = {
+    onRefreshSignal: PropTypes.func,
+    class_urn: PropTypes.string.isRequired
+  };
 
   constructor( props ) {
     super( props );
@@ -128,6 +133,7 @@ class AddClassMembers extends React.Component {
             users_to_add_as_members: [ ],
             role_popover_open: false
           } );
+          if( typeof this.props.onRefreshSignal === 'function' ) this.props.onRefreshSignal( );
         } else {
           throw new Error( 'API call failed.' );
         }
@@ -155,6 +161,8 @@ class AddClassMembers extends React.Component {
   }
 
   render( ) {
+    // this.state.all_users should remove users already present in the class
+    // and those in the "toAdd" list
     return (
       <div>
         <h2>Add New Members:</h2>
