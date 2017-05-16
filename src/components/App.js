@@ -23,6 +23,9 @@ import TeacherSetup from './TeacherSetup/TeacherSetup';
 import Classes from './Class/Classes';
 import ClassComponent from './Class/ClassComponent';
 
+import Perf from 'react-addons-perf'
+window.Perf = Perf
+
 class App extends React.Component {
   constructor( props ) {
     super( props );

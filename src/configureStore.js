@@ -14,7 +14,7 @@ import createActionBuffer from 'redux-action-buffer'
 // To batch actions with a debounce... this is to prevent cascading renders
 import { batchedSubscribe } from 'redux-batched-subscribe';
 
-import utils from './utils/utils.js';
+import Utils from './utils/utils.js';
 const loggerMiddleware = createLogger( );
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
@@ -28,7 +28,7 @@ export default function configureStore( preloadedState, onRehydrate ) {
         thunkMiddleware,
         loggerMiddleware
       ),
-      batchedSubscribe( utils.debounce( notify => {
+      batchedSubscribe( Utils.debounce( notify => {
         notify( );
       }, 100 ) ),
       autoRehydrate( ),

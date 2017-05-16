@@ -144,7 +144,6 @@ class AddClassMembers extends React.Component {
   };
 
   deleteNewMember = ( index ) => {
-    // todo: fix? this doesn't work for some reason
     this.setState( ( prevState ) => ( {
       users_to_add_as_members: prevState.users_to_add_as_members.filter( ( _ , _index ) => index !== _index  )
     } ) );

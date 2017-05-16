@@ -1,5 +1,5 @@
 class Utils {
-  debounce(func, wait, immediate) {
+  static debounce(func, wait, immediate) {
     let timeout;
     return function() {
       let context = this, args = arguments;
@@ -15,10 +15,4 @@ class Utils {
   }
 }
 
-let utils;
-
-if( typeof utils === 'undefined' ) {
-  utils = new Utils( );
-}
-
-export default utils;
+export default Utils;

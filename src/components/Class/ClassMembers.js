@@ -9,7 +9,6 @@ import {  Row,
 import DataTables from 'material-ui-datatables';
 
 import ConfirmDialog from '../utils/ConfirmDialog';
-import AppProgressBar from '../utils/AppProgressBar';
 
 import { TableDataHandler } from '../../utils/material-ui-datatables-helpers';
 import { flashNotification } from '../../actions/notification';
@@ -126,7 +125,7 @@ class ClassMembers extends React.Component {
         this.all_members_selected = true;
         return;
       }
-    } else if( typeof rows === 'array' ) {
+    } else if( Array.isArray( rows ) ) {
       this.members_selected = rows;
     }
   };
