@@ -9,6 +9,10 @@ import {  Grid,
 import ClassMembers from './ClassMembers';
 import AddClassMembers from './AddClassMembers';
 import ClassMeta from './ClassMeta';
+import ClassCampaigns from './ClassCampaigns';
+import ImportCampaign from './ImportCampaign';
+
+import ButtonedDialog from '../utils/ButtonedDialog';
 
 import ohmage from '../../utils/ohmage-wrapper';
 
@@ -42,6 +46,23 @@ class ClassComponent extends React.Component {
           } )
           .catch( error => {
             console.error( error );
+          } )
+          .then( ( ) => {
+            // todo: move to ohmage-es6
+            return ohmage.__call( '/campaign/read', { output_format: 'short', class_urn_list: [ class_urn ] } )
+                    .then( response => {
+                      let campaigns = [ ];
+                      for( let each_campaign in response ) {
+                        response[ each_campaign ].campaign_urn = each_campaign;
+                        campaigns.push( response[ each_campaign ] );
+                      }
+                      return campaigns;
+                    } );
+          } )
+          .then( response => {
+            this.setState( {
+              associated_campaigns: response
+            } );
           } )
   };
 
@@ -87,16 +108,18 @@ class ClassComponent extends React.Component {
               </Col>
             </Row>
             <Row>
-              <Col xs style={{marginLeft:'22px'}}>
-                <h2>Import new campaigns</h2>
-              </Col>
+              <ButtonedDialog button_label='Import New Campaign'
+                              dialog_title='Import New Campaign'>
+                <ImportCampaign class_urn={this.class_urn} />
+              </ButtonedDialog>
             </Row>
             <Row>
               <Col xs style={{marginLeft:'22px'}}>
                 <h2>Attach existing campaigns</h2>
               </Col>
             </Row>
-            <h2>Campaigns</h2>
+            <ClassCampaigns campaigns={this.state.associated_campaigns}
+                            class_urn={this.state.urn} />
           </Grid>
         </Paper>
       </div>
