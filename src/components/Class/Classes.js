@@ -8,6 +8,7 @@ import { AvReplay } from 'material-ui/svg-icons';
 
 import { fetchClasses } from '../../actions/classes';
 
+// todo: use material-ui-datatables-helpers
 class Classes extends React.Component {
 
   constructor( props ) {
