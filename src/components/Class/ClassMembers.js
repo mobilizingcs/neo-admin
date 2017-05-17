@@ -50,7 +50,6 @@ class ClassMembers extends React.Component {
                                         return false;
                                       } );
     this.state = {
-      confirm_dialog: false,
       is_loading: false
     };
   }
@@ -174,7 +173,6 @@ class ClassMembers extends React.Component {
                         selectable={true}
                         showRowHover={true}
                         showCheckboxes={true}
-                        selectable={true}
                         multiSelectable={true}
                         enableSelectAll={true}
                         columns={this.data.columns}

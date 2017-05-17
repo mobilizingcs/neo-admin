@@ -1,5 +1,5 @@
 class Utils {
-  static debounce(func, wait, immediate) {
+  static debounce( func, wait, immediate ) {
     let timeout;
     return function() {
       let context = this, args = arguments;
@@ -12,6 +12,10 @@ class Utils {
       timeout = setTimeout(later, wait);
       if (callNow) func.apply(context, args);
     };
+  }
+
+  static urnify( str ) {
+    return str.toLowerCase().replace(/\s/g, "_").replace(/[^a-z0-9:_]/gi,'');
   }
 }
 
