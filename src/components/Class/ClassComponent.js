@@ -26,12 +26,14 @@ class ClassComponent extends React.Component {
     this.class_urn_param = this.props.match.params.urn;
 
     this.state = {
-      urn: this.class_urn_param,
+      urn: '',
       name: '',
       description: '',
       associated_campaigns: [ ],
       class_members: [ ]
-    }
+    };
+
+    this.import_campaign_dialog = null;
   }
 
   populateState = ( class_urn = this.class_urn_param ) => {
@@ -69,6 +71,13 @@ class ClassComponent extends React.Component {
   componentDidMount( ) {
     this.populateState( );
   }
+
+  importCampaignRefreshSignal = ( ) => {
+    this.populateState( );
+    if( this.import_campaign_dialog ) {
+      this.import_campaign_dialog.handleCloseDialog( );
+    }
+  };
 
   render( ) {
     return (
@@ -109,8 +118,11 @@ class ClassComponent extends React.Component {
             </Row>
             <Row>
               <ButtonedDialog button_label='Import New Campaign'
-                              dialog_title='Import New Campaign'>
-                <ImportCampaign class_urn={this.class_urn} />
+                              dialog_title='Import New Campaign'
+                              ref={ instance => this.import_campaign_dialog = instance }>
+                <ImportCampaign class_urn={this.state.urn}
+                                name_prefix={this.state.name}
+                                onRefreshSignal={this.importCampaignRefreshSignal}/>
               </ButtonedDialog>
             </Row>
             <Row>

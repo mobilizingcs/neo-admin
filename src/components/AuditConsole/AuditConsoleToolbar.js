@@ -19,7 +19,7 @@ import {  Dialog,
 
 import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
 
-// todo: wrap FAL inside ButtonedDialog 
+// todo: wrap FAL inside ButtonedDialog
 import FetchAuditLogs from './FetchAuditLogs';
 
 class AuditConsoleToolbar extends React.Component {

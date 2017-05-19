@@ -15,7 +15,7 @@ class Utils {
   }
 
   static urnify( str ) {
-    return str.toLowerCase().replace(/\s/g, "_").replace(/[^a-z0-9:_]/gi,'');
+    return str.toLowerCase().replace(/\s/g, '_').replace(/[^a-z0-9:_]/gi,'');
   }
 }
 
