@@ -77,17 +77,7 @@ class AddClassMembers extends React.Component {
   };
 
   populateState = ( ) => {
-    // todo: move to ohmage-es6
-    ohmage.__call( '/user/search', { } )
-          .then( response => {
-            // move this logic to ohmage-es6
-            let users = [ ];
-            for( let user in response ) {
-              response.username = user;
-              users.push( response[ user ] );
-            }
-            return users;
-          } )
+    ohmage.userSearch( )
           .then( users => {
             let _users = [ ];
             for( let key in users ) {
@@ -96,7 +86,7 @@ class AddClassMembers extends React.Component {
             this.setState( {
               all_users: _users
             } )
-          } )
+          } );
   };
 
   openRolePopover = event => {
