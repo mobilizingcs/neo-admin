@@ -6,12 +6,12 @@ import { IconButton } from 'material-ui';
 
 import {  Row,
           Col } from 'react-flexbox-grid';
-import DataTables from 'material-ui-datatables';
 
 import ConfirmDialog from '../utils/ConfirmDialog';
 
 import { TableDataHandler } from '../../utils/material-ui-datatables-helpers';
 import { flashNotification } from '../../actions/notification';
+import EnhancedDataTable from '../utils/EnhancedDataTable';
 
 import ohmage from '../../utils/ohmage-wrapper';
 
@@ -38,22 +38,22 @@ class ClassCampaigns extends React.Component {
     }
   ];
 
+  static searchFunction = function( object ) {
+    // 'this' is the search query
+    const text = object.name.trim().toLowerCase() + ' ' + object.campaign_urn;
+    if( text.indexOf( this ) > -1 ) {
+      return true;
+    }
+    return false;
+  };
+
   constructor( props ) {
     super( props );
-
-    const searchFunction = function( object ) {
-      // 'this' is the search query
-      const text = object.name.trim().toLowerCase() + ' ' + object.campaign_urn;
-      if( text.indexOf( this ) > -1 ) {
-        return true;
-      }
-      return false;
-    };
 
     this.data = new TableDataHandler( props.campaigns,
                                       ClassCampaigns.columns,
                                       10,
-                                      searchFunction );
+                                      ClassCampaigns.searchFunction );
     this.confirm_removal_dialog = null;
     this.campaigns_to_remove = [ ];
     this.class_urn = '';
@@ -72,27 +72,10 @@ class ClassCampaigns extends React.Component {
     }
   };
 
-  // todo: refactor ClassCampaigns and ClassMembers to extend from a parent component
-  // that implements the next 4 methods
   tableSelectRows = ( rows = [ ] ) => {
     if( Array.isArray( rows ) ) {
       this.campaigns_to_remove = rows;
     }
-  };
-
-  tableSearch = ( search_query ) => {
-    this.data.searchQuery = search_query;
-    this.forceUpdate( );
-  };
-
-  tableNextPage = ( ) => {
-    this.data.currentPage++;
-    this.forceUpdate( );
-  };
-
-  tablePreviousPage = ( ) => {
-    this.data.currentPage--;
-    this.forceUpdate( );
   };
 
   removeCampaign = ( ) => {
@@ -127,29 +110,23 @@ class ClassCampaigns extends React.Component {
                             title='Campaign Removal Confirmation'
                             onConfirm={this.removeCampaign}
                             text='Are you sure you want to remove (detach) this campaign?' />
-            <DataTables showHeaderToolbar={true}
-                        title='Campaigns in Class'
-                        filterHintText='Search existing campaign names'
-                        selectable={true}
-                        showRowHover={true}
-                        showCheckboxes={true}
-                        columns={this.data.columns}
-                        data={this.data.currentPageData}
-                        page={this.data.currentPage}
-                        count={this.data.totalObjectCount}
-                        toolbarIconRight={ [
-                          <IconButton iconClassName='material-icons'
-                                      tooltip='Remove Campaign from class'
-                                      onTouchTap={this.confirmRemovalAction}>
-                            delete
-                          </IconButton>
-                        ] }
-                        onRowSelection={this.tableSelectRows}
-                        onNextPageClick={this.tableNextPage}
-                        onPreviousPageClick={this.tablePreviousPage}
-                        onFilterValueChange={this.tableSearch}
-                        rowSizeList={[]}
-                        rowSizeLabel='' />
+            <EnhancedDataTable  DataHandler={this.data}
+                                title='Campaigns in Class'
+                                filterHintText='Search existing campaign names'
+                                showHeaderToolbar={true}
+                                selectable={true}
+                                showRowHover={true}
+                                showCheckboxes={true}
+                                rowSizeList={[]}
+                                rowSizeLabel=''
+                                onRowSelection={this.tableSelectRows}
+                                toolbarIconRight={ [
+                                  <IconButton iconClassName='material-icons'
+                                              tooltip='Remove Campaign from class'
+                                              onTouchTap={this.confirmRemovalAction}>
+                                    delete
+                                  </IconButton>
+                                ] } />
           </Col>
         </Row>
       </div>

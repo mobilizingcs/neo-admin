@@ -111,23 +111,18 @@ class ClassComponent extends React.Component {
         <Divider />
         <Paper style={{padding: 30, marginLeft: 1}}>
           <Grid fluid>
-            <Row>
-              <Col xs>
+            <Row around='xs' middle='xs'>
+              <Col xs={9}>
                 <h1>Campaigns</h1>
               </Col>
-            </Row>
-            <Row>
-              <ButtonedDialog button_label='Import New Campaign'
-                              dialog_title='Import New Campaign'
-                              ref={ instance => this.import_campaign_dialog = instance }>
-                <ImportCampaign class_urn={this.state.urn}
-                                name_prefix={this.state.name}
-                                onRefreshSignal={this.importCampaignRefreshSignal}/>
-              </ButtonedDialog>
-            </Row>
-            <Row>
-              <Col xs style={{marginLeft:'22px'}}>
-                <h2>Attach existing campaigns</h2>
+              <Col xs={3} style={{textAlign:'right'}}>
+                <ButtonedDialog button_label='Import New Campaign'
+                                dialog_title='Import New Campaign'
+                                ref={ instance => this.import_campaign_dialog = instance }>
+                  <ImportCampaign class_urn={this.state.urn}
+                                  name_prefix={this.state.name}
+                                  onRefreshSignal={this.importCampaignRefreshSignal}/>
+                </ButtonedDialog>
               </Col>
             </Row>
             <ClassCampaigns campaigns={this.state.associated_campaigns}
