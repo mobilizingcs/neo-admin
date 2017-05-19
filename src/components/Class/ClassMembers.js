@@ -6,11 +6,12 @@ import { IconButton, CircularProgress } from 'material-ui';
 
 import {  Row,
           Col } from 'react-flexbox-grid';
-import DataTables from 'material-ui-datatables';
+
+import { TableDataHandler } from '../../utils/material-ui-datatables-helpers';
+import EnhancedDataTable from '../utils/EnhancedDataTable';
 
 import ConfirmDialog from '../utils/ConfirmDialog';
 
-import { TableDataHandler } from '../../utils/material-ui-datatables-helpers';
 import { flashNotification } from '../../actions/notification';
 
 import ohmage from '../../utils/ohmage-wrapper';
@@ -23,32 +24,34 @@ class ClassMembers extends React.Component {
     onRefreshSignal: PropTypes.func
   };
 
+  static columns = [ {
+      key: 'username',
+      label: 'Username'
+    }, {
+      key: 'role',
+      label: 'Role'
+    }
+  ];
+
+  static searchFunction = function( object ) {
+    // 'this' is the search query
+    if( object.username.indexOf( this ) > -1 ) {
+      return true;
+    }
+    return false;
+  };
+
   constructor( props ) {
     super( props );
-
-    this.columns = [ {
-        key: 'username',
-        label: 'Username'
-      }, {
-        key: 'role',
-        label: 'Role'
-      }
-    ];
 
     this.members_selected = [ ];
     this.all_members_selected = false;
 
     this.class_urn = '';
     this.data = new TableDataHandler( props.class_members,
-                                      this.columns,
+                                      ClassMembers.columns,
                                       10,
-                                      function( object ) {
-                                        // 'this' is the search query
-                                        if( object.username.indexOf( this ) > -1 ) {
-                                          return true;
-                                        }
-                                        return false;
-                                      } );
+                                      ClassMembers.searchFunction );
     this.state = {
       is_loading: false
     };
@@ -98,21 +101,6 @@ class ClassMembers extends React.Component {
     } else {
       this.props.dispatch( flashNotification( 'Please select members to delete.' ) );
     }
-  };
-
-  tableSearch = ( search_query ) => {
-    this.data.searchQuery = search_query;
-    this.forceUpdate( );
-  };
-
-  tableNextPage = ( ) => {
-    this.data.currentPage++;
-    this.forceUpdate( );
-  };
-
-  tablePreviousPage = ( ) => {
-    this.data.currentPage--;
-    this.forceUpdate( );
   };
 
   tableSelectRows = ( rows = [ ] ) => {
@@ -167,31 +155,25 @@ class ClassMembers extends React.Component {
                             title='Confirmation'
                             onConfirm={this.deleteMembers}
                             text='Are you sure you want to delete the members?' />
-            <DataTables showHeaderToolbar={true}
-                        title='Current Class Members'
-                        filterHintText='Search existing members'
-                        selectable={true}
-                        showRowHover={true}
-                        showCheckboxes={true}
-                        multiSelectable={true}
-                        enableSelectAll={true}
-                        columns={this.data.columns}
-                        data={this.data.currentPageData}
-                        page={this.data.currentPage}
-                        count={this.data.totalObjectCount}
-                        toolbarIconRight={ [
-                          <IconButton iconClassName='material-icons'
-                                      tooltip='Delete Members'
-                                      onTouchTap={this.confirmDeleteAction}>
-                            delete
-                          </IconButton>
-                        ] }
-                        onRowSelection={this.tableSelectRows}
-                        onNextPageClick={this.tableNextPage}
-                        onPreviousPageClick={this.tablePreviousPage}
-                        onFilterValueChange={this.tableSearch}
-                        rowSizeList={[]}
-                        rowSizeLabel='' />
+            <EnhancedDataTable  DataHandler={this.data}
+                                showHeaderToolbar={true}
+                                title='Current Class Members'
+                                filterHintText='Search existing members'
+                                selectable={true}
+                                showRowHover={true}
+                                showCheckboxes={true}
+                                multiSelectable={true}
+                                enableSelectAll={true}
+                                toolbarIconRight={ [
+                                  <IconButton iconClassName='material-icons'
+                                              tooltip='Delete Members'
+                                              onTouchTap={this.confirmDeleteAction}>
+                                    delete
+                                  </IconButton>
+                                ] }
+                                onRowSelection={this.tableSelectRows}
+                                rowSizeList={[]}
+                                rowSizeLabel='' />
           </Col>
         </Row>
       </div>
