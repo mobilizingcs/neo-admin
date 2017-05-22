@@ -1,5 +1,5 @@
 class TableDataHandler {
-  constructor( data = [ ], columns = [ ], rows_per_page = 10, search_function ) {
+  constructor( data = [ ], columns = [ ], rows_per_page = 10, search_function = ( ) => { }, data_sort_function = ( ) => { } ) {
     // this.data_view is the "current view" for the table
     // this.data_copy is the actual data out of which the "current view" is obtained
     // this.data_view contents should never be modified... instead, return new arrays
@@ -10,6 +10,7 @@ class TableDataHandler {
     this.columns = columns;
     this.rows_per_page = rows_per_page;
     this.data_search_function = search_function;
+    this.data_sort_function = data_sort_function;
   }
 
   setData( data ) {
@@ -59,6 +60,12 @@ class TableDataHandler {
       this.setData( this.data_copy.filter( this.data_search_function, this.search_query ) );
     } else {
       this.setData( this.data_copy );
+    }
+  }
+
+  setSortParameters( column, order ) {
+    if( typeof this.data_sort_function === 'function' ) {
+      this.setData( this.data_copy.sort( this.data_sort_function.call( null, column, order ) ) );
     }
   }
 

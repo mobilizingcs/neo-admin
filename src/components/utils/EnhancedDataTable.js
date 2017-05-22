@@ -29,6 +29,11 @@ class EnhancedDataTable extends React.Component {
     this.forceUpdate( );
   };
 
+  tableSortOrderChange = ( column, order ) => {
+    this.DataHandler.setSortParameters( column, order );
+    this.forceUpdate( );
+  };
+
   render( ) {
     return (
       <div>
@@ -39,7 +44,8 @@ class EnhancedDataTable extends React.Component {
                       count={this.DataHandler.totalObjectCount}
                       onNextPageClick={this.tableNextPage}
                       onPreviousPageClick={this.tablePreviousPage}
-                      onFilterValueChange={this.tableSearch} />}
+                      onFilterValueChange={this.tableSearch}
+                      onSortOrderChange={this.tableSortOrderChange} />}
       </div>
     );
   }
